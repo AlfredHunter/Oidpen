@@ -1,0 +1,42 @@
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[DebugChecksum]
+Checksum=-510032145
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[watch_formats]
+Fmt0={W}0:Accdata	0	3
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Breakpoints]
+Bp0=_ "STD_CODE" "{$PROJ_DIR$}.243.5" 0 0 0 0 "" 0 ""
+Bp1=_ "STD_CODE" "{F:\Code\SurperMan}.118.3" 0 0 0 0 "" 0 ""
+Bp2=_ "STD_CODE" "{$PROJ_DIR$}.99.1" 0 0 0 0 "" 0 ""
+Bp3=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\target\CC2540PEN\_hal_uart_spi.c}.487.3" 0 0 0 0 "" 0 ""
+Bp4=_ "STD_CODE" "{$PROJ_DIR$\..\..\Profiles\SimpleProfile\simpleGATTprofile.c}.638.9" 0 0 0 0 "" 0 ""
+Bp5=_ "STD_CODE" "{$PROJ_DIR$\..\Source\lis3dh.c}.194.5" 0 0 0 0 "" 0 ""
+Count=6
+[ChipconEmu]
+Stop timers on halt=0
+Leave target running=1
+[Aliases]
+A0=_ "D:\work\BLE\example\BLE-CC254x-1.4.0\Components\osal\common\OSAL_PwrMgr.c" ""
+A1=_ "D:\work\BLE\example\BLE-CC254x-1.4.0\Projects\ble\SimpleBLEPeripheral\Source\SimpleBLEPeripheral_Main.c" ""
+A2=_ "D:\work\BLE\example\BLE-CC254x-1.4.0\Projects\ble\common\npi\npi_np\npi.c" ""
+Count=3
+SuppressDialog=0
