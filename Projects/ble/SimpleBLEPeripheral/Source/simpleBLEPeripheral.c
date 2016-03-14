@@ -49,7 +49,7 @@
 #include "hal_adc.h"
 #include "hal_led.h"
 #include "hal_key.h"
-#include "hal_lcd.h"
+//#include "hal_lcd.h"
 
 #include "gatt.h"
 
@@ -375,6 +375,7 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   
   Batt_Register(BattCB); /* 注册电池服务的应用回调函数 */  
 
+#if (defined HAL_LCD) && (HAL_LCD == TRUE)
 #if defined FEATURE_OAD
   #if defined (HAL_IMAGE_A)
     HalLcdWriteStringValue( "BLE Peri-A", OAD_VER_NUM( _imgHdr.ver ), 16, HAL_LCD_LINE_1 );
@@ -384,7 +385,7 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
 #else
   HalLcdWriteString( "BLE Peripheral", HAL_LCD_LINE_1 );
 #endif // FEATURE_OAD
-
+#endif // HAL_LCD
 
   // Register callback with SimpleGATTprofile
   //VOID SimpleProfile_RegisterAppCBs( &simpleBLEPeripheral_SimpleProfileCBs );

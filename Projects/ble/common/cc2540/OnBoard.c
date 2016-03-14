@@ -99,7 +99,7 @@ void appForceBoot(void);
 /*********************************************************************
  * LOCAL VARIABLES
  */
-
+void OnBoard_KeyCallback ( uint8 keys, uint8 state );
 // Registered keys task ID, initialized to NOT USED.
 //static uint8 registeredKeysTaskID = NO_TASK_ID;
 
@@ -123,7 +123,10 @@ void InitBoard( uint8 level )
   }
   else  // !OB_COLD
   {
-    OnboardKeyIntEnable = HAL_KEY_INTERRUPT_ENABLE;
+    /* Initialize Key stuff */
+    //OnboardKeyIntEnable = HAL_KEY_INTERRUPT_ENABLE;
+    OnboardKeyIntEnable = HAL_KEY_INTERRUPT_DISABLE;
+    HalKeyConfig( OnboardKeyIntEnable, OnBoard_KeyCallback);
     NPI_InitTransport(&OnBoard_OidRecvCallback);
   }
 }
@@ -317,15 +320,15 @@ uint8 OnBoard_SendKeys( uint8 keys, uint8 state )
  *
  * @return  void
  *********************************************************************/
- #if 0
+ #if 1
 void OnBoard_KeyCallback ( uint8 keys, uint8 state )
 {
-  uint8 shift;
+//  uint8 shift;
   (void)state;
 
   // shift key (S1) is used to generate key interrupt
   // applications should not use S1 when key interrupt is enabled
- 
+#if 0 
   if ( OnBoard_SendKeys( keys, shift ) != SUCCESS )
   {
     // Process SW1 here
@@ -334,7 +337,7 @@ void OnBoard_KeyCallback ( uint8 keys, uint8 state )
     }
    
   }
-
+#endif
   /* If any key is currently pressed down and interrupt
      is still enabled, disable interrupt and switch to polling */
   if( keys != 0 )

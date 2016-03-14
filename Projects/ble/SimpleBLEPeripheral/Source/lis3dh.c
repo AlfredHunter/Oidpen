@@ -33,7 +33,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 // How often to perform periodic event
-#define LIS_PERIODIC_EVT_PERIOD                   500
+#define LIS_PERIODIC_EVT_PERIOD                   200
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
@@ -183,9 +183,9 @@ static void performPeriodicTask( void )
     if(response==1)
     { 
       old_position = position;
-      if(SUCCESS == OnBoard_Send_gSensors(LIS_X, Accdata.AXIS_X));
-      if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, Accdata.AXIS_Y));
-      if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, Accdata.AXIS_Z));
+      if(SUCCESS == OnBoard_Send_gSensors(LIS_X, SWAP_UINT16(Accdata.AXIS_X)));
+      if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, SWAP_UINT16(Accdata.AXIS_Y)));
+      if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));
     }
 }
 
@@ -225,6 +225,7 @@ uint16 gSensorApp_ProcessEvent( uint8 task_id, uint16 events )
     // Discard unknown events
   return 0;
 }
+
 
 
 

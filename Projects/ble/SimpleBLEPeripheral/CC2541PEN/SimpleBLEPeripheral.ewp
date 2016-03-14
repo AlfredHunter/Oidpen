@@ -289,6 +289,7 @@
           <state>BRIAN_HW_TEST</state>
           <state>BLINK_LEDS</state>
           <state>HAL_ADC=TRUE</state>
+          <state>HAL_KEY=TRUE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -6622,9 +6623,6 @@
           </file>
           <file>
             <name>$PROJ_DIR$\..\..\..\..\Components\hal\target\CC2540PEN\hal_key.c</name>
-          </file>
-          <file>
-            <name>$PROJ_DIR$\..\..\..\..\Components\hal\target\CC2540PEN\hal_lcd.c</name>
           </file>
           <file>
             <name>$PROJ_DIR$\..\..\..\..\Components\hal\target\CC2540PEN\hal_led.c</name>

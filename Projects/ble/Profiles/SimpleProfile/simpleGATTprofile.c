@@ -127,7 +127,7 @@ static CONST gattAttrType_t simpleProfileService = { ATT_BT_UUID_SIZE, simplePro
 
 
 // Simple Profile Characteristic 1 Properties
-static uint8 simpleProfileChar1Props = GATT_PROP_NOTIFY;
+static uint8 simpleProfileChar1Props = GATT_PROP_READ | GATT_PROP_NOTIFY;
 
 // Characteristic 1 Value
 static uint16 simpleProfileChar1 = 0;
@@ -138,7 +138,7 @@ static uint8 simpleProfileChar1UserDesp[8] = "AXIS_X\0";
 
 
 // Simple Profile Characteristic 2 Properties
-static uint8 simpleProfileChar2Props = GATT_PROP_NOTIFY;
+static uint8 simpleProfileChar2Props = GATT_PROP_READ | GATT_PROP_NOTIFY;
 
 // Characteristic 2 Value
 static uint16 simpleProfileChar2 = 0;
@@ -149,7 +149,7 @@ static uint8 simpleProfileChar2UserDesp[8] = "AXIS_Y\0";
 
 
 // Simple Profile Characteristic 3 Properties
-static uint8 simpleProfileChar3Props = GATT_PROP_NOTIFY;
+static uint8 simpleProfileChar3Props = GATT_PROP_READ | GATT_PROP_NOTIFY;
 
 // Characteristic 3 Value
 static uint16 simpleProfileChar3 = 0;
@@ -210,7 +210,7 @@ static gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] =
       // Characteristic Value 1
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar1UUID },
-        0, 
+        GATT_PERMIT_READ, 
         0, 
         (uint8 *)&simpleProfileChar1 
       },
@@ -240,7 +240,7 @@ static gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] =
       // Characteristic Value 2
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar2UUID },
-        0, 
+        GATT_PERMIT_READ, 
         0, 
         (uint8 *)&simpleProfileChar2 
       },
@@ -270,7 +270,7 @@ static gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] =
       // Characteristic Value 3
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar3UUID },
-        0, 
+        GATT_PERMIT_READ, 
         0, 
         (uint8 *)&simpleProfileChar3 
       },

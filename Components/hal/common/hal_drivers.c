@@ -248,9 +248,8 @@ uint16 Hal_ProcessEvent( uint8 task_id, uint16 events )
   {
 #if (defined HAL_KEY) && (HAL_KEY == TRUE)
     /* Check for keys */
-    processKey();
-
-   
+    processKey();  
+    osal_start_timerEx (Hal_TaskID, HAL_KEY_EVENT, HAL_KEY_DEBOUNCE_VALUE);
 #endif
     return events ^ HAL_KEY_EVENT;
   }
