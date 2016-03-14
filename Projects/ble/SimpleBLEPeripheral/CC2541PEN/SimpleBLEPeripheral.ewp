@@ -10,11 +10,23 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>1</archiveVersion>
       <data>
-        <version>8</version>
+        <version>6</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>DerivativeDescriptionFile</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Previous Derivative File</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Showed Derivative</name>
+          <state>CC2541F256</state>
+        </option>
         <option>
           <name>CPU Core</name>
           <version>1</version>
@@ -250,41 +262,13 @@
           <name>Extended stack is offset</name>
           <state>0</state>
         </option>
-        <option>
-          <name>OGChipSelectMenu</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>OGChipSelectMenuSlave</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>DPC Address</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AutoModificationType</name>
-          <state></state>
-        </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>UseMDU</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AdditionalDriver</name>
-          <state></state>
-        </option>
       </data>
     </settings>
     <settings>
       <name>ICC8051</name>
-      <archiveVersion>6</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>11</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -570,10 +554,6 @@
           <name>NoSizeConstraints</name>
           <state>0</state>
         </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>1</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -736,7 +716,6 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
-        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -754,9 +733,9 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1076,30 +1055,6 @@
           <version>0</version>
           <state>0</state>
         </option>
-        <option>
-          <name>XLink DPC Address</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XlinkLogEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogInputFiles</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogModuleSelection</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogPrintfScanf</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogSegmentSelection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -1128,11 +1083,6 @@
       </data>
     </settings>
     <settings>
-      <name>HWMUL</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-    <settings>
       <name>BILINK</name>
       <archiveVersion>0</archiveVersion>
       <data/>
@@ -1146,11 +1096,23 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>1</archiveVersion>
       <data>
-        <version>8</version>
+        <version>6</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>DerivativeDescriptionFile</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Previous Derivative File</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Showed Derivative</name>
+          <state>CC2541F256</state>
+        </option>
         <option>
           <name>CPU Core</name>
           <version>1</version>
@@ -1386,41 +1348,13 @@
           <name>Extended stack is offset</name>
           <state>0</state>
         </option>
-        <option>
-          <name>OGChipSelectMenu</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>OGChipSelectMenuSlave</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>DPC Address</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AutoModificationType</name>
-          <state></state>
-        </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>UseMDU</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AdditionalDriver</name>
-          <state></state>
-        </option>
       </data>
     </settings>
     <settings>
       <name>ICC8051</name>
-      <archiveVersion>6</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>11</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -1700,10 +1634,6 @@
           <name>NoSizeConstraints</name>
           <state>0</state>
         </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>1</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -1866,7 +1796,6 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
-        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -1884,9 +1813,9 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2206,30 +2135,6 @@
           <version>0</version>
           <state>0</state>
         </option>
-        <option>
-          <name>XLink DPC Address</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XlinkLogEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogInputFiles</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogModuleSelection</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogPrintfScanf</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogSegmentSelection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -2258,11 +2163,6 @@
       </data>
     </settings>
     <settings>
-      <name>HWMUL</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-    <settings>
       <name>BILINK</name>
       <archiveVersion>0</archiveVersion>
       <data/>
@@ -2276,11 +2176,23 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>1</archiveVersion>
       <data>
-        <version>8</version>
+        <version>6</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>DerivativeDescriptionFile</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Previous Derivative File</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Showed Derivative</name>
+          <state>CC2541F256</state>
+        </option>
         <option>
           <name>CPU Core</name>
           <version>1</version>
@@ -2516,41 +2428,13 @@
           <name>Extended stack is offset</name>
           <state>0</state>
         </option>
-        <option>
-          <name>OGChipSelectMenu</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>OGChipSelectMenuSlave</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>DPC Address</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AutoModificationType</name>
-          <state></state>
-        </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>UseMDU</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AdditionalDriver</name>
-          <state></state>
-        </option>
       </data>
     </settings>
     <settings>
       <name>ICC8051</name>
-      <archiveVersion>6</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>11</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -2835,10 +2719,6 @@
           <name>NoSizeConstraints</name>
           <state>0</state>
         </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>1</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -3001,7 +2881,6 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
-        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -3019,9 +2898,9 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3341,30 +3220,6 @@
           <version>0</version>
           <state>0</state>
         </option>
-        <option>
-          <name>XLink DPC Address</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XlinkLogEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogInputFiles</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogModuleSelection</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogPrintfScanf</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogSegmentSelection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -3393,11 +3248,6 @@
       </data>
     </settings>
     <settings>
-      <name>HWMUL</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-    <settings>
       <name>BILINK</name>
       <archiveVersion>0</archiveVersion>
       <data/>
@@ -3411,11 +3261,23 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>1</archiveVersion>
       <data>
-        <version>8</version>
+        <version>6</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>DerivativeDescriptionFile</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Previous Derivative File</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Showed Derivative</name>
+          <state>CC2541F256</state>
+        </option>
         <option>
           <name>CPU Core</name>
           <version>1</version>
@@ -3651,41 +3513,13 @@
           <name>Extended stack is offset</name>
           <state>0</state>
         </option>
-        <option>
-          <name>OGChipSelectMenu</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>OGChipSelectMenuSlave</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>DPC Address</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AutoModificationType</name>
-          <state></state>
-        </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>UseMDU</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AdditionalDriver</name>
-          <state></state>
-        </option>
       </data>
     </settings>
     <settings>
       <name>ICC8051</name>
-      <archiveVersion>6</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>11</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -3970,10 +3804,6 @@
           <name>NoSizeConstraints</name>
           <state>0</state>
         </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>1</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -4136,7 +3966,6 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
-        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -4154,9 +3983,9 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -4476,30 +4305,6 @@
           <version>0</version>
           <state>0</state>
         </option>
-        <option>
-          <name>XLink DPC Address</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XlinkLogEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogInputFiles</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogModuleSelection</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogPrintfScanf</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogSegmentSelection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -4528,11 +4333,6 @@
       </data>
     </settings>
     <settings>
-      <name>HWMUL</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-    <settings>
       <name>BILINK</name>
       <archiveVersion>0</archiveVersion>
       <data/>
@@ -4546,11 +4346,23 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>1</archiveVersion>
       <data>
-        <version>8</version>
+        <version>6</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>DerivativeDescriptionFile</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Previous Derivative File</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Showed Derivative</name>
+          <state>CC2541F256</state>
+        </option>
         <option>
           <name>CPU Core</name>
           <version>1</version>
@@ -4786,41 +4598,13 @@
           <name>Extended stack is offset</name>
           <state>0</state>
         </option>
-        <option>
-          <name>OGChipSelectMenu</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>OGChipSelectMenuSlave</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>DPC Address</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AutoModificationType</name>
-          <state></state>
-        </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>UseMDU</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AdditionalDriver</name>
-          <state></state>
-        </option>
       </data>
     </settings>
     <settings>
       <name>ICC8051</name>
-      <archiveVersion>6</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>11</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5106,10 +4890,6 @@
           <name>NoSizeConstraints</name>
           <state>0</state>
         </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>1</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -5272,7 +5052,6 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
-        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -5290,9 +5069,9 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -5612,30 +5391,6 @@
           <version>0</version>
           <state>0</state>
         </option>
-        <option>
-          <name>XLink DPC Address</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XlinkLogEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogInputFiles</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogModuleSelection</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogPrintfScanf</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogSegmentSelection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -5664,11 +5419,6 @@
       </data>
     </settings>
     <settings>
-      <name>HWMUL</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
-    </settings>
-    <settings>
       <name>BILINK</name>
       <archiveVersion>0</archiveVersion>
       <data/>
@@ -5682,11 +5432,23 @@
     <debug>1</debug>
     <settings>
       <name>General</name>
-      <archiveVersion>3</archiveVersion>
+      <archiveVersion>1</archiveVersion>
       <data>
-        <version>8</version>
+        <version>6</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
+        <option>
+          <name>DerivativeDescriptionFile</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Previous Derivative File</name>
+          <state>$TOOLKIT_DIR$\config\devices\Texas Instruments\CC2541F256.i51</state>
+        </option>
+        <option>
+          <name>Showed Derivative</name>
+          <state>CC2541F256</state>
+        </option>
         <option>
           <name>CPU Core</name>
           <version>1</version>
@@ -5922,41 +5684,13 @@
           <name>Extended stack is offset</name>
           <state>0</state>
         </option>
-        <option>
-          <name>OGChipSelectMenu</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>OGChipSelectMenuSlave</name>
-          <state>CC2541F256	CC2541F256</state>
-        </option>
-        <option>
-          <name>DPC Address</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AutoModificationType</name>
-          <state></state>
-        </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>UseMDU</name>
-          <state></state>
-        </option>
-        <option>
-          <name>AdditionalDriver</name>
-          <state></state>
-        </option>
       </data>
     </settings>
     <settings>
       <name>ICC8051</name>
-      <archiveVersion>6</archiveVersion>
+      <archiveVersion>5</archiveVersion>
       <data>
-        <version>11</version>
+        <version>10</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -6242,10 +5976,6 @@
           <name>NoSizeConstraints</name>
           <state>0</state>
         </option>
-        <option>
-          <name>UseHWMulDivUnit</name>
-          <state>1</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -6408,7 +6138,6 @@
       <data>
         <extensions></extensions>
         <cmdline></cmdline>
-        <hasPrio>0</hasPrio>
       </data>
     </settings>
     <settings>
@@ -6426,9 +6155,9 @@
     </settings>
     <settings>
       <name>XLINK</name>
-      <archiveVersion>4</archiveVersion>
+      <archiveVersion>3</archiveVersion>
       <data>
-        <version>21</version>
+        <version>18</version>
         <wantNonLocal>1</wantNonLocal>
         <debug>1</debug>
         <option>
@@ -6748,30 +6477,6 @@
           <version>0</version>
           <state>0</state>
         </option>
-        <option>
-          <name>XLink DPC Address</name>
-          <state>1</state>
-        </option>
-        <option>
-          <name>XlinkLogEnable</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogInputFiles</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogModuleSelection</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogPrintfScanf</name>
-          <state>0</state>
-        </option>
-        <option>
-          <name>XlinkLogSegmentSelection</name>
-          <state>0</state>
-        </option>
       </data>
     </settings>
     <settings>
@@ -6798,11 +6503,6 @@
           <state>###Uninitialized###</state>
         </option>
       </data>
-    </settings>
-    <settings>
-      <name>HWMUL</name>
-      <archiveVersion>0</archiveVersion>
-      <data/>
     </settings>
     <settings>
       <name>BILINK</name>
