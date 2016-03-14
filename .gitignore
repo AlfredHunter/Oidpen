@@ -9,5 +9,5 @@ Build/*
 *.zip
 *.tmp
 settings\*
-CC2541DK-MINI Keyfob\*
+*\CC2541DK-MINI Keyfob\*
 CC2541-OAD-ImgA\*
