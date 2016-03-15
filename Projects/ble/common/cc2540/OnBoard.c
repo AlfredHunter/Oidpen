@@ -49,7 +49,7 @@
 
 #include "hal_led.h"
 #include "hal_key.h"
-
+   
 #include "npi.h"
 
 
@@ -367,7 +367,7 @@ void OnBoard_KeyCallback ( uint8 keys, uint8 state )
 void  OnBoard_OidRecvCallback( uint16 oid )
 {
     //判断处理IOD值
-    
+    resetLis3dTimerCount();
     //--------------------发送OID值
     if( OnBoard_SendOids(oid) == SUCCESS)
     {

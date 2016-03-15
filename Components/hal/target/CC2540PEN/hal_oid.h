@@ -19,6 +19,10 @@ extern "C"
 #define DEVICE_ADDRESS   0X78
 #define OID_CODE         0X88
 
+typedef enum {
+  OID_POWER_OFF = 0x00,
+  OID_POWER_ON  = 0x01
+} oidState_t;
 /**************************************************************************************************
  *                                        FUNCTIONS - API
  **************************************************************************************************/
@@ -31,6 +35,7 @@ extern "C"
 
 extern void halOidPower(uint8 on) ;
 extern void HalOidInit(void);
+extern oidState_t getOidState(void);
 
 #ifdef __cplusplus
 }

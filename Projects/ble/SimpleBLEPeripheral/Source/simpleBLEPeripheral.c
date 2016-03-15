@@ -512,6 +512,8 @@ static void simpleBLEPeripheral_ProcessOSALMsg( osal_event_hdr_t *pMsg )
   {
     case OID_CHANGE:
         simpleBLEPeripheral_Oid( ((oid_t *)pMsg)->oid );
+        HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH); 
+        HalLedSet(HAL_LED_G, HAL_LED_MODE_5HZ_FLASH); 
     break;
     case GENSOR_CHANGE:
         simpleBLEPeripheral_gSensors( ((gSensor_t *)pMsg)->xyz, ((gSensor_t *)pMsg)->value );

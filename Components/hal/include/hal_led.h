@@ -82,7 +82,7 @@ extern "C"
 #define HAL_LED_DEFAULT_FLASH_TIME    100
 
 /* Users */
-#define HAL_LED_5HZ_FLASH_COUNT       2
+#define HAL_LED_5HZ_FLASH_COUNT       4
 #define HAL_LED_5HZ_FLASH_TIME        200
 #define HAL_LED_10HZ_FLASH_COUNT      0
 #define HAL_LED_10HZ_FLASH_TIME       100

@@ -66,7 +66,27 @@ extern "C"
 #define HAL_KEY_STATE_NORMAL          0x00
 #define HAL_KEY_STATE_SHIFT           0x01
 
-#define HAL_KEY_SW_1 0x01  // Joystick up
+#define HAL_KEY_SW_1            0x01  // Key
+#define HAL_SENSOR_SW_IN1       0x02  // Sensor Int1
+#define HAL_SENSOR_SW_IN2       0x03  // Sensor Int2
+
+/* key is at P0.3 */
+#define HAL_KEY_SW_1_PORT     P0
+#define HAL_KEY_SW_1_BIT      BV(3)
+#define HAL_KEY_SW_1_SEL      P0SEL
+#define HAL_KEY_SW_1_DIR      P0DIR
+
+/* Sensor IN1 is at P0.2 */
+#define HAL_SENSOR_SW_IN1_PORT     P0
+#define HAL_SENSOR_SW_IN1_BIT      BV(2)
+#define HAL_SENSOR_SW_IN1_SEL      P0SEL
+#define HAL_SENSOR_SW_IN1_DIR      P0DIR
+  
+/* Sensor IN2 is at P0.1 */
+#define HAL_SENSOR_SW_IN2_PORT     P0
+#define HAL_SENSOR_SW_IN2_BIT      BV(1)
+#define HAL_SENSOR_SW_IN2_SEL      P0SEL
+#define HAL_SENSOR_SW_IN2_DIR      P0DIR
 
 #define HAL_KEY_DEBOUNCE_VALUE  25
 #define HAL_KEY_LONG_PUSH_VALUE  5000

@@ -112,14 +112,6 @@
 #define HAL_KEY_CPU_PORT_2_IF P2IF
 
 
-/* SW_1 is at P1.1 */
-#define HAL_KEY_SW_1_PORT   P1
-#define HAL_KEY_SW_1_BIT    BV(1)
-#define HAL_KEY_SW_1_SEL    P1SEL
-#define HAL_KEY_SW_1_DIR    P1DIR
-
-
-
 #define HAL_KEY_SW_1_IEN      IEN2  /* CPU interrupt mask register */
 #define HAL_KEY_SW_1_ICTL     P1IEN /* Port Interrupt Control register */
 #define HAL_KEY_SW_1_ICTLBIT  BV(1) /* P0IEN - P0.0 enable/disable bit */
@@ -149,14 +141,14 @@ typedef void (*EVT_FUNC_PTR)(void);
  *                                        LOCAL VARIABLES
  **************************************************************************************************/
 
-static const digioConfig pinKey = {HAL_KEY_PORT,
-                                   HAL_KEY_PIN,
-                                   BV(HAL_KEY_PIN),
+static const digioConfig pinKey = {HAL_SENSOR_INT1_PORT,
+                                   HAL_SENSOR_INT1_PIN,
+                                   BV(HAL_SENSOR_INT1_PIN),
                                    HAL_DIGIO_INPUT, 0};
 static void HalKeyISR(void);
 static EVT_FUNC_PTR key_event_tbl[HAL_KEY_EVENT_MAX] = {0};
 
-static uint8 keyValue = MCU_IO_TRISTATE;
+//static uint8 keyValue = MCU_IO_TRISTATE;
 static int counter = 0;
 
 static uint8 keyStatus = HAL_KEY_EVENT_INVALID;
@@ -186,13 +178,15 @@ void shortPressHandle(void);
 void HalKeyInit( void )
 {
 	HAL_CONFIG_IO_INPUT(HAL_KEY_PORT, HAL_KEY_PIN, MCU_IO_TRISTATE);
-
-	//halDigioConfig(&pinKey);
-	//halDigioIntSetEdge(&pinKey, HAL_DIGIO_INT_FALLING_EDGE);
-	//halDigioIntConnect(&pinKey,&HalKeyISR);
+        HAL_CONFIG_IO_INPUT(HAL_SENSOR_INT1_PORT, HAL_SENSOR_INT1_PIN, MCU_IO_TRISTATE);
+        HAL_CONFIG_IO_INPUT(HAL_SENSOR_INT2_PORT, HAL_SENSOR_INT2_PIN, MCU_IO_TRISTATE);
+        
+	halDigioConfig(&pinKey);
+	halDigioIntSetEdge(&pinKey, HAL_DIGIO_INT_RISING_EDGE);
+	halDigioIntConnect(&pinKey,&HalKeyISR);
         HalKeyIntConnect(HAL_KEY_EVENT_LONG, &longPressHandle);
         HalKeyIntConnect(HAL_KEY_EVENT_SHORT, &shortPressHandle);
-	//HalKeyIntEnable();
+	HalKeyIntEnable();
         HalKeyConfigured = FALSE;
 }
 
@@ -314,7 +308,23 @@ void HalKeyIntClear(void)
  **************************************************************************************************/
 uint8 HalKeyRead() 
 {
-	return HAL_IO_GET(HAL_KEY_PORT, HAL_KEY_PIN);
+  uint8 keys = 0;
+
+  if (!(HAL_KEY_SW_1_PORT & HAL_KEY_SW_1_BIT))    /* Key is active low */
+  {
+    keys |= HAL_KEY_SW_1;
+  }
+  if ((HAL_SENSOR_SW_IN1_PORT & HAL_SENSOR_SW_IN1_BIT))    /* Key is active low */
+  {
+    keys |= HAL_SENSOR_SW_IN1;
+  }
+  if ((HAL_SENSOR_SW_IN2_PORT & HAL_SENSOR_SW_IN2_BIT))    /* Key is active low */
+  {
+    keys |= HAL_SENSOR_SW_IN2;
+  }
+
+  return keys;
+//	return HAL_IO_GET(HAL_KEY_PORT, HAL_KEY_PIN);
 }
 /**************************************************************************************************
  * @fn      HalKeyISR
@@ -327,7 +337,8 @@ uint8 HalKeyRead()
  **************************************************************************************************/
 static void HalKeyISR(void) 
 {
-   #ifdef BRIAN_HW_TEST
+  HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK);
+   #if  0 //def BRIAN_HW_TEST
    static uint8 led_test = 0;
    led_test ++;
 
@@ -351,8 +362,8 @@ static void HalKeyISR(void)
    }
 
    #endif
-   osal_stop_timerEx(Hal_TaskID, HAL_KEY_EVENT);
-   osal_start_timerEx (Hal_TaskID, HAL_KEY_EVENT, HAL_KEY_DEBOUNCE_VALUE);
+//   osal_stop_timerEx(Hal_TaskID, HAL_KEY_EVENT);
+//   osal_start_timerEx (Hal_TaskID, HAL_KEY_EVENT, HAL_KEY_DEBOUNCE_VALUE);
 }
 /**************************************************************************************************
  * @fn      processKey
@@ -369,10 +380,11 @@ void processKey(void)
   uint8 keys = 0;
 //  uint8 notify = 0;
   uint8 event_id = HAL_KEY_EVENT_INVALID;
-	
-  keyValue = HalKeyRead();
+  
+  keys = HalKeyRead();
+//  keyValue = HalKeyRead();
 #if 0
-  keys = keyValue;
+
   /* If interrupts are not enabled, previous key status and current key status
   * are compared to find out if a key has changed status.
   */
@@ -399,26 +411,26 @@ void processKey(void)
 #endif
   counter++;
   //long push
-  if( !keyValue && (counter > HAL_KEY_LONG_PUSH) ) 
+  if( (keys & HAL_KEY_SW_1) && (counter > HAL_KEY_LONG_PUSH) ) 
   {
     counter = 0;
     event_id = HAL_KEY_EVENT_LONG;
     keyStatus = HAL_KEY_EVENT_LONG;
   }
   //short push
-  if( !keyValue && counter >= 2 )
+  if( (keys & HAL_KEY_SW_1) && counter >= 2 )
   {
     event_id = HAL_KEY_EVENT_DOWN;
   }
   
-  if( keyValue && (counter >=2 && counter < HAL_KEY_LONG_PUSH))
+  if( !(keys & HAL_KEY_SW_1) && (counter >=2 && counter < HAL_KEY_LONG_PUSH))
   {
     counter = 0;
     event_id = HAL_KEY_EVENT_SHORT;
   }
   
-  if( keyValue && (event_id == HAL_KEY_EVENT_INVALID) )
-  { 
+  if( !(keys & HAL_KEY_SW_1) && (event_id == HAL_KEY_EVENT_INVALID) )
+  {
     counter = 0;
     if( keyStatus == HAL_KEY_EVENT_LONG )
     {

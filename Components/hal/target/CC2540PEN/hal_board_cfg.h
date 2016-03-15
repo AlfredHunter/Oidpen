@@ -157,6 +157,12 @@ extern "C"
 #define HAL_LED_G_PORT                    1 //  - zhj 20160113
 #define HAL_LED_G_PIN                     1
 
+/* sensor */
+#define HAL_SENSOR_INT1_PORT            0
+#define HAL_SENSOR_INT1_PIN             2
+#define HAL_SENSOR_INT2_PORT            0
+#define HAL_SENSOR_INT2_PIN             1
+
 /* S1 */
 #define HAL_KEY_PORT              0
 #define HAL_KEY_PIN               3
@@ -330,7 +336,6 @@ extern "C"
 
 
 // --zhj
-
 
 /* Buzzer */
 #define HAL_SHAKER_ON()            HAL_IO_SET_HIGH(HAL_SHAKER_PORT,HAL_SHAKER_PIN)

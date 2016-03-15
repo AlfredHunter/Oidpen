@@ -29,23 +29,27 @@
 #include "OSAL.h"
 #include "OSAL_PwrMgr.h"
 #include "OnBoard.h"
+#include "hal_led.h"
+#include "hal_oid.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 // How often to perform periodic event
-#define LIS_PERIODIC_EVT_PERIOD                   200
+#define LIS_PERIODIC_EVT_PERIOD                   100
+#define LIS_POSITION_NOT_CHANGE_COUNT             (5000/LIS_PERIODIC_EVT_PERIOD)
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 
 uint8 response;
 AccAxesRaw_t Accdata;
+//static AccAxesRaw_t oldAccdata;
 uint8 Test_response_Who;
 
 /*********************************************************************
  * LOCAL VARIABLES
  */
 static uint8 gSensorApp_TaskID;   // Task ID for internal task/event processing
-
+static uint8 timer_count = 0;
 /* Extern variables ----------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
@@ -128,7 +132,7 @@ void HalLis3dhInit(void)
  
 /**********************************************************************************************/
 /******Example 2******/
-#ifdef __EXAMPLE2__H
+//#ifdef __EXAMPLE2__H
    //configure Mems Sensor
    //set Interrupt Threshold 
    response = SetInt1Threshold(20);
@@ -148,7 +152,7 @@ void HalLis3dhInit(void)
   {
   }
 
-
+#ifdef __EXAMPLE2__H
 
   while(1)
   {
@@ -174,19 +178,72 @@ void HalLis3dhInit(void)
 /************************************************************************************************/
 } // end main
 
-
+void resetLis3dTimerCount(void)
+{
+  timer_count = 0;
+}
 static void performPeriodicTask( void )
 {
-   
+    //get 6D Position
+    response = Get6DPosition(&position);
+    if((response==1) && (old_position!=position))
+    {
+      if( OID_POWER_OFF == getOidState())
+      {
+        halOidPower(1);
+        HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
+      }
+      
+      switch (position)
+      {
+        case UP_SX:            
+          if(SUCCESS == OnBoard_Send_gSensors(LIS_X, 0x0001));
+          break;
+        case UP_DX:    
+          if(SUCCESS == OnBoard_Send_gSensors(LIS_X, 0x0002));
+          break;
+        case DW_SX:    
+          if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, 0x0001));
+          break;              
+        case DW_DX:    
+          if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, 0x0002));
+          break; 
+        case TOP:      
+          if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, 0x0001));
+          break; 
+        case BOTTOM:   
+          if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, 0x0002));
+          break; 
+        default:       break;
+      }
+      //function for MKI109V1 board    
+      old_position = position;
+ //     HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
+      timer_count = 0;
+    }
+    timer_count ++ ;
+    if(timer_count > LIS_POSITION_NOT_CHANGE_COUNT) //5s
+    {
+      timer_count = 0;
+      if(OID_POWER_ON == getOidState())
+      {
+        halOidPower(0);
+        HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK); 
+      }
+    }
+#if 0  
     //get Acceleration Raw data  
     response = GetAccAxesRaw(&Accdata);
+    
     if(response==1)
     { 
+      osal_memcpy(&oldAccdata, &Accdata, sizeof(AccAxesRaw_t));
       old_position = position;
       if(SUCCESS == OnBoard_Send_gSensors(LIS_X, SWAP_UINT16(Accdata.AXIS_X)));
       if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, SWAP_UINT16(Accdata.AXIS_Y)));
       if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));
     }
+#endif
 }
 
 void gSensorApp_Init( uint8 task_id )

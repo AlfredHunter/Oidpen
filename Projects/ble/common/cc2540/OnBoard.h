@@ -202,7 +202,7 @@ extern void OnBoard_OidRecvCallback( uint16 oid);
  */
 extern __near_func void Onboard_soft_reset( void );
 
-
+extern void resetLis3dTimerCount(void);
 /*********************************************************************
  */
 
