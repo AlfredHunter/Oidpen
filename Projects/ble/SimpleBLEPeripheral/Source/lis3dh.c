@@ -42,7 +42,7 @@
 
 uint8 response;
 AccAxesRaw_t Accdata;
-//static AccAxesRaw_t oldAccdata;
+static AccAxesRaw_t oldAccdata;
 uint8 Test_response_Who;
 
 /*********************************************************************
@@ -50,6 +50,7 @@ uint8 Test_response_Who;
  */
 static uint8 gSensorApp_TaskID;   // Task ID for internal task/event processing
 static uint8 timer_count = 0;
+static uint16 old_xData = 0;
 /* Extern variables ----------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
@@ -175,6 +176,17 @@ void HalLis3dhInit(void)
     }
   }
 #endif /*__EXAMPLE2__H */ 
+#if 0
+  response = SetClickTHS( 20 );
+  if(response == 1) {}
+  response = SetClickCFG( ZD_ENABLE | ZS_ENABLE | YD_ENABLE | YS_ENABLE | XD_ENABLE | XS_ENABLE);
+  if(response == 1)
+  {
+  }
+  SetClickLATENCY(100);
+  SetClickLIMIT(50);
+  SetInt2Pin( CLICK_ON_PIN_INT2_ENABLE );
+#endif
 /************************************************************************************************/
 } // end main
 
@@ -182,8 +194,17 @@ void resetLis3dTimerCount(void)
 {
   timer_count = 0;
 }
+
 static void performPeriodicTask( void )
 {
+#if 0
+    uint8 click_state;
+    response = GetClickResponce(&click_state);
+    if( (response == 1) && (click_state != NO_CLICK ))
+    {
+      HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK); 
+    }
+#endif
     //get 6D Position
     response = Get6DPosition(&position);
     if((response==1) && (old_position!=position))
@@ -193,7 +214,7 @@ static void performPeriodicTask( void )
         halOidPower(1);
         HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
       }
-      
+#if 0     
       switch (position)
       {
         case UP_SX:            
@@ -216,6 +237,7 @@ static void performPeriodicTask( void )
           break; 
         default:       break;
       }
+#endif
       //function for MKI109V1 board    
       old_position = position;
  //     HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
@@ -231,17 +253,29 @@ static void performPeriodicTask( void )
         HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK); 
       }
     }
-#if 0  
+#if 1
     //get Acceleration Raw data  
     response = GetAccAxesRaw(&Accdata);
     
     if(response==1)
     { 
       osal_memcpy(&oldAccdata, &Accdata, sizeof(AccAxesRaw_t));
-      old_position = position;
+//      old_position = position;
+      
+      if( ( Accdata.AXIS_X & 0xff00 ) != old_xData )
+      {
+        if( OID_POWER_OFF == getOidState())
+        {
+          halOidPower(1);
+          HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
+        }
+      }
+      old_xData = ( Accdata.AXIS_X & 0xff00 );
+      
       if(SUCCESS == OnBoard_Send_gSensors(LIS_X, SWAP_UINT16(Accdata.AXIS_X)));
       if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, SWAP_UINT16(Accdata.AXIS_Y)));
       if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));
+      
     }
 #endif
 }

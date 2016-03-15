@@ -322,7 +322,6 @@ uint8 HalKeyRead()
   {
     keys |= HAL_SENSOR_SW_IN2;
   }
-
   return keys;
 //	return HAL_IO_GET(HAL_KEY_PORT, HAL_KEY_PIN);
 }
@@ -360,8 +359,8 @@ static void HalKeyISR(void)
      led_test = 0;
 	 HAL_SHAKER_ON();
    }
-
    #endif
+   
 //   osal_stop_timerEx(Hal_TaskID, HAL_KEY_EVENT);
 //   osal_start_timerEx (Hal_TaskID, HAL_KEY_EVENT, HAL_KEY_DEBOUNCE_VALUE);
 }

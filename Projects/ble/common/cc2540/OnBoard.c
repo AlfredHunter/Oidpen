@@ -366,12 +366,12 @@ void OnBoard_KeyCallback ( uint8 keys, uint8 state )
 
 void  OnBoard_OidRecvCallback( uint16 oid )
 {
-    //判断处理IOD值
     resetLis3dTimerCount();
+    //判断处理IOD值
     //--------------------发送OID值
     if( OnBoard_SendOids(oid) == SUCCESS)
     {
-        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
+//        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
     }
 }
 /*********************************************************************

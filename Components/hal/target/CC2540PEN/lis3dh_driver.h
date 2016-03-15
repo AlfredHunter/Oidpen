@@ -471,6 +471,9 @@ status_t SetClickCFG(u8_t status);
 status_t SetInt6D4DConfiguration(INT_6D_4D_t ic);
 status_t GetInt1Src(u8_t* val);
 status_t GetInt1SrcBit(u8_t statusBIT);
+status_t SetClickTHS(u8_t ths);
+status_t SetClickLATENCY(u8_t t_latency);
+status_t SetClickLIMIT(u8_t t_limit);
 
 //FIFO Functions
 status_t FIFOModeEnable(FifoMode_t fm);
