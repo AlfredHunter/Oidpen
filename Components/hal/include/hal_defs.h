@@ -66,7 +66,7 @@
 #define ABS(n)     (((n) < 0) ? -(n) : (n))
 #endif
 
-
+#define SWAP_UINT16(a) (uint16)((((a) & 0xFF00) >> 8) | (((a) & 0x00FF) << 8))
 /* takes a byte out of a uint32 : var - uint32,  ByteNum - byte to take out (0 - 3) */
 #define BREAK_UINT32( var, ByteNum ) \
           (uint8)((uint32)(((var) >>((ByteNum) * 8)) & 0x00FF))

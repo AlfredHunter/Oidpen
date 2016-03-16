@@ -13,6 +13,11 @@ extern "C"
 #include "hal_types.h"
 #include "hal_board.h"
 
+#define TABLE_NUMBER_MIN  0x040B
+#define TABLE_NUMBER_MAX  0x041B
+
+#define IS_TABLE_NUMBER(x) ((x) >= TABLE_NUMBER_MIN && (x) <= TABLE_NUMBER_MAX) 
+
 /**************************************************************************************************
  * CONSTANTS
  **************************************************************************************************/

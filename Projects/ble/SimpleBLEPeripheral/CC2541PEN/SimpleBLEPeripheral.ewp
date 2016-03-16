@@ -289,7 +289,7 @@
           <state>BRIAN_HW_TEST</state>
           <state>BLINK_LEDS</state>
           <state>HAL_ADC=TRUE</state>
-          <state>HAL_KEY=TRUE</state>
+          <state>HAL_KEY=FALSE</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -479,7 +479,6 @@
           <state>$PROJ_DIR$\..\..\common\npi\npi_np</state>
           <state>$PROJ_DIR$\..\..\Profiles\Roles</state>
           <state>$PROJ_DIR$\..\..\Profiles\SimpleProfile</state>
-          <state>$PROJ_DIR$\..\..\Profiles\Keys</state>
           <state>$PROJ_DIR$\..\..\Profiles\DevInfo</state>
           <state>$PROJ_DIR$\..\..\Profiles\Batt</state>
           <state>$PROJ_DIR$\..\..\Profiles\HIDDev</state>

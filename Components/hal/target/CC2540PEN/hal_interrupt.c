@@ -453,7 +453,7 @@ HAL_ISR_FUNCTION(port1_ISR,P1INT_VECTOR)
 *
 * @return  none
 */
-/*
+
 HAL_ISR_FUNCTION(port2_ISR,P2INT_VECTOR)
 {
     register uint8 i;
@@ -473,7 +473,7 @@ HAL_ISR_FUNCTION(port2_ISR,P2INT_VECTOR)
         //__low_power_mode_off_on_exit();
     }
 }
-*/
+
 #if 0
 HAL_ISR_FUNCTION( halI2CIsr, I2C_VECTOR )
 {

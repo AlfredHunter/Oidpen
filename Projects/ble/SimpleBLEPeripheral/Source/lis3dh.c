@@ -85,7 +85,6 @@ void HalLis3dhInit(void)
      
   //Inizialize MEMS Sensor
   //set ODR (turn ON device)
-
   
   response = GetWHO_AM_I(&Test_response_Who);
   if(response==1)
@@ -133,7 +132,7 @@ void HalLis3dhInit(void)
  
 /**********************************************************************************************/
 /******Example 2******/
-//#ifdef __EXAMPLE2__H
+#ifdef __EXAMPLE2__H
    //configure Mems Sensor
    //set Interrupt Threshold 
    response = SetInt1Threshold(20);
@@ -153,7 +152,7 @@ void HalLis3dhInit(void)
   {
   }
 
-#ifdef __EXAMPLE2__H
+//#ifdef __EXAMPLE2__H
 
   while(1)
   {
@@ -205,6 +204,8 @@ static void performPeriodicTask( void )
       HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK); 
     }
 #endif
+    
+#if 0     
     //get 6D Position
     response = Get6DPosition(&position);
     if((response==1) && (old_position!=position))
@@ -214,7 +215,6 @@ static void performPeriodicTask( void )
         halOidPower(1);
         HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
       }
-#if 0     
       switch (position)
       {
         case UP_SX:            
@@ -237,12 +237,13 @@ static void performPeriodicTask( void )
           break; 
         default:       break;
       }
-#endif
+
       //function for MKI109V1 board    
       old_position = position;
  //     HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
       timer_count = 0;
     }
+#endif
     timer_count ++ ;
     if(timer_count > LIS_POSITION_NOT_CHANGE_COUNT) //5s
     {
@@ -262,20 +263,22 @@ static void performPeriodicTask( void )
       osal_memcpy(&oldAccdata, &Accdata, sizeof(AccAxesRaw_t));
 //      old_position = position;
       
-      if( ( Accdata.AXIS_X & 0xff00 ) != old_xData )
+      if( (( Accdata.AXIS_X & 0xff00 ) != old_xData) && \
+          (( Accdata.AXIS_X & 0xff00 ) != 0x0000) && \
+          (( Accdata.AXIS_X & 0xff00 ) != 0xFF00) )
       {
         if( OID_POWER_OFF == getOidState())
         {
           halOidPower(1);
           HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
         }
+        timer_count = 0;
       }
       old_xData = ( Accdata.AXIS_X & 0xff00 );
       
       if(SUCCESS == OnBoard_Send_gSensors(LIS_X, SWAP_UINT16(Accdata.AXIS_X)));
       if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, SWAP_UINT16(Accdata.AXIS_Y)));
-      if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));
-      
+      if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));     
     }
 #endif
 }

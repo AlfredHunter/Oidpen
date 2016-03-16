@@ -171,8 +171,9 @@ void HalDriverInit (void)
 #if (defined HAL_KEY) && (HAL_KEY == TRUE)
   HalKeyInit();
 #endif
+  /* SHAKER */
 #if (defined HAL_SHAKER) && (HAL_SHAKER == TRUE)
-	HAL_INIT_SHAKER();
+  HAL_INIT_SHAKER();
 #endif
 
   /* SPI */

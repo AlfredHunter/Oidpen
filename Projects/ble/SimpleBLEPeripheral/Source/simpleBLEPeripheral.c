@@ -50,6 +50,7 @@
 #include "hal_led.h"
 #include "hal_key.h"
 //#include "hal_lcd.h"
+#include "hal_oid.h"
 
 #include "gatt.h"
 
@@ -152,26 +153,17 @@ static gaprole_States_t gapProfileState = GAPROLE_INIT;
 // GAP - SCAN RSP data (max size = 31 bytes)
 //static uint8 scanRspData[] =
 uint8 scanRspData[] =
-{
+{ 
   // complete name
-  0x0f,   // length of this data
+  0x08,   // length of this data
   GAP_ADTYPE_LOCAL_NAME_COMPLETE,
-  0x4d,   // 'M'
-  0x65,   // 'e'
-  0x6e,   // 'n'
-  0x75,   // 'u'
-  0x4f,   // 'O'
-  0x72,   // 'r'
-  0x64,   // 'd'
-  0x65,   // 'e'
-  0x72,   // 'r'
-  0x50,   // 'P'
-  0x65,   // 'e'
-  0x6e,   // 'n'
-
-  0x55,   // ''
-  0x55,   // ''
-
+  'P',   
+  'e',   
+  'n',
+  '_',   
+  '0',   
+  '0',   
+  '1',
   // connection interval range
   0x05,   // length of this data
   GAP_ADTYPE_SLAVE_CONN_INTERVAL_RANGE,
@@ -207,7 +199,7 @@ static uint8 advertData[] =
 };
 
 // GAP GATT Attributes
-static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "Simple BLE Peripheral";
+static uint8 attDeviceName[GAP_DEVICE_NAME_LEN] = "Pen_001";
 
 /*********************************************************************
  * LOCAL FUNCTIONS
@@ -216,6 +208,8 @@ static void simpleBLEPeripheral_gSensors( uint8 xyz, int16 value );
 static void simpleBLEPeripheral_ProcessOSALMsg( osal_event_hdr_t *pMsg );
 static void peripheralStateNotificationCB( gaprole_States_t newState );
 static void performPeriodicTask( void );
+static void changeBLEPenName(uint16 oid);
+
 //static void simpleProfileChangeCB( uint8 paramID );
 static void BattCB(uint8 event);
 
@@ -462,7 +456,27 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     return ( events ^ SBP_START_DEVICE_EVT );
   }
 
+  if ( events & SBP_RESTART_DEVICE_EVT )
+  {
+    uint8 adv_enabled = TRUE;
+        // Start the Device
+     /*启动设备,括号内为回调函数,来设置要显示的信息或操作*/
+    VOID GAPRole_StartDevice( &simpleBLEPeripheral_PeripheralCBs );
 
+    // Start Bond Manager
+     /*启动绑定管理函数,处理认证信息和注册任务信息*/
+    VOID GAPBondMgr_Register( &simpleBLEPeripheral_BondMgrCBs );
+//    GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );//当主机扫描到广播后会发出扫描请求，从机就发回该数据到主机
+    GAPRole_SetParameter( GAPROLE_ADVERT_DATA, sizeof( advertData ), advertData );//广播参数
+    
+    GGS_GetParameter(GGS_DEVICE_NAME_ATT,attDeviceName);
+    GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
+    
+    VOID GAPBondMgr_Register( &simpleBLEPeripheral_BondMgrCBs );
+    
+    return ( events ^ SBP_RESTART_DEVICE_EVT );
+  }
+  
   /*检查是否有周期任务事件*/
   if ( events & SBP_PERIODIC_EVT )
   {
@@ -477,6 +491,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     // Perform periodic application task
     /*处理周期事件中的处理工作*/
     performPeriodicTask();
+    
     /*返回未处理的任务标志*/
     return (events ^ SBP_PERIODIC_EVT);
   }
@@ -511,12 +526,23 @@ static void simpleBLEPeripheral_ProcessOSALMsg( osal_event_hdr_t *pMsg )
   switch ( pMsg->event )
   {
     case OID_CHANGE:
-        simpleBLEPeripheral_Oid( ((oid_t *)pMsg)->oid );
-        HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH); 
-        HalLedSet(HAL_LED_G, HAL_LED_MODE_5HZ_FLASH); 
+        if(IS_TABLE_NUMBER( ((oid_t *)pMsg)->oid) ) 
+        {
+            changeBLEPenName( ((oid_t *)pMsg)->oid );	
+            break;
+        }
+//        if (gapProfileState == GAPROLE_CONNECTED)
+        {
+          simpleBLEPeripheral_Oid( SWAP_UINT16(((oid_t *)pMsg)->oid ));
+          HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH); 
+          HalLedSet(HAL_LED_G, HAL_LED_MODE_5HZ_FLASH); 
+        }
     break;
     case GENSOR_CHANGE:
-        simpleBLEPeripheral_gSensors( ((gSensor_t *)pMsg)->xyz, ((gSensor_t *)pMsg)->value );
+//        if (gapProfileState == GAPROLE_CONNECTED)
+        {
+          simpleBLEPeripheral_gSensors( ((gSensor_t *)pMsg)->xyz, ((gSensor_t *)pMsg)->value );
+        }
     break;
     default:
     // do nothing
@@ -595,7 +621,7 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
           HalLcdWriteString( bdAddr2Str( ownAddress ),  HAL_LCD_LINE_2 );
           HalLcdWriteString( "Initialized",  HAL_LCD_LINE_3 );
         #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
-          HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK);
+//          HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK);
       }
       break;
 
@@ -641,8 +667,8 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
         #if (defined HAL_LCD) && (HAL_LCD == TRUE)
           HalLcdWriteString( "Disconnected",  HAL_LCD_LINE_3 );
         #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
-          HalLedSet(HAL_LED_B, HAL_LED_MODE_OFF );
-          HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH);
+ //         HalLedSet(HAL_LED_B, HAL_LED_MODE_OFF );
+ //         HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH);
       }
       break;
 
@@ -651,8 +677,8 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
         #if (defined HAL_LCD) && (HAL_LCD == TRUE)
           HalLcdWriteString( "Timed Out",  HAL_LCD_LINE_3 );
         #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
-          HalLedSet(HAL_LED_B, HAL_LED_MODE_OFF );
-          HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK);
+//          HalLedSet(HAL_LED_B, HAL_LED_MODE_OFF );
+//          HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK);
 #ifdef PLUS_BROADCASTER
         // Reset flag for next connection.
         first_conn_flag = 0;
@@ -704,6 +730,43 @@ static void BattCB(uint8 event)
      //HalLedSet(HAL_LED_B, HAL_LED_MODE_10HZ_FLASH);
   }  
 }
+/*********************************************************************
+* @fn changeBLEPenName() 
+*
+*/
 
+static void changeBLEPenName(uint16 oid)
+{
+	uint8 adv_enabled = FALSE;
+        
+        uint8 table_num;
+        table_num = oid - TABLE_NUMBER_MIN;
+        
+	attDeviceName[4] = '0' + table_num/100;
+	attDeviceName[5] = '0' + table_num%100/10;
+	attDeviceName[6] = '0' + table_num%10;
+
+	scanRspData[6] = '0' + table_num/100;
+	scanRspData[7] = '0' + table_num%100/10;
+	scanRspData[8] = '0' + table_num%10;		
+	
+        GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
+        GAPRole_TerminateConnection();
+/*       
+	if( gapProfileState == GAPROLE_CONNECTED ) 
+        {		
+          GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
+          GAPRole_TerminateConnection();
+	}
+	if( gapProfileState == GAPROLE_ADVERTISING )
+        {
+          //disable advertising on disconnect
+          GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
+        }
+ */   
+	GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );
+	GGS_SetParameter( GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName ); 
+        osal_start_timerEx( simpleBLEPeripheral_TaskID,  SBP_RESTART_DEVICE_EVT, 100 );	
+}
 /*********************************************************************
 *********************************************************************/

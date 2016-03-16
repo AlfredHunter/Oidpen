@@ -320,7 +320,7 @@ uint8 OnBoard_SendKeys( uint8 keys, uint8 state )
  *
  * @return  void
  *********************************************************************/
- #if 1
+#if 1
 void OnBoard_KeyCallback ( uint8 keys, uint8 state )
 {
 //  uint8 shift;
@@ -371,7 +371,7 @@ void  OnBoard_OidRecvCallback( uint16 oid )
     //--------------------·¢ËÍOIDÖµ
     if( OnBoard_SendOids(oid) == SUCCESS)
     {
-//        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
+        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
     }
 }
 /*********************************************************************
