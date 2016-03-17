@@ -16,8 +16,16 @@ extern "C"
 #define TABLE_NUMBER_MIN  0x040B
 #define TABLE_NUMBER_MAX  0x041B
 
-#define IS_TABLE_NUMBER(x) ((x) >= TABLE_NUMBER_MIN && (x) <= TABLE_NUMBER_MAX) 
+#define DISH_INC_NUMBER_MIN   0x041C
+#define DISH_INC_NUMBER_MAX   0x042C
 
+#define DISH_RED_NUMBER_MIN   0x07F3
+#define DISH_RED_NUMBER_MAX   0x0814
+
+#define IS_TABLE_NUMBER(x) ((x) >= TABLE_NUMBER_MIN && (x) <= TABLE_NUMBER_MAX) 
+#define IS_DISH_INC_NUMBER(x)  ((x) >= DISH_INC_NUMBER_MIN && (x) <= DISH_INC_NUMBER_MAX) 
+#define IS_DISH_RED_NUMBER(x)  ((x) >= DISH_RED_NUMBER_MIN && (x) <= DISH_RED_NUMBER_MAX)
+  
 /**************************************************************************************************
  * CONSTANTS
  **************************************************************************************************/

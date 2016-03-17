@@ -240,7 +240,7 @@ static void performPeriodicTask( void )
 
       //function for MKI109V1 board    
       old_position = position;
- //     HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
+      HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
       timer_count = 0;
     }
 #endif

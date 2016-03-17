@@ -371,7 +371,7 @@ void  OnBoard_OidRecvCallback( uint16 oid )
     //--------------------·¢ËÍOIDÖµ
     if( OnBoard_SendOids(oid) == SUCCESS)
     {
-        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
+//        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
     }
 }
 /*********************************************************************
