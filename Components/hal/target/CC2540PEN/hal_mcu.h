@@ -140,6 +140,11 @@ typedef unsigned char halIntState_t;
 #define WD_RESET2           (0x50 | WD_EN | WD_INT_1900_USEC)
 #define WD_KICK()           st( WDCTL = (0xA0 | WDCTL & 0x0F); WDCTL = (0x50 | WDCTL & 0x0F); )
 
+#define WD_INIT_1000MS()        st( WDCTL = 0x00; WDCTL |= 0x08; )                      //间隔时间为1000MS的看门狗启动  
+#define WD_INIT_250MS()         st( WDCTL = 0x00; WDCTL |= 0x01; WDCTL |= 0x08; )       //间隔时间为250MS的看门狗启动  
+#define WD_INIT_15_625MS()      st( WDCTL = 0x00; WDCTL |= 0x02; WDCTL |= 0x08; )       //间隔时间为15.625MS的看门狗启动  
+#define WD_INIT_1_9MS()         st( WDCTL = 0x00; WDCTL |= 0x03; WDCTL |= 0x08; )       //间隔时间为1.9MS的看门狗启动  
+
 /* disable interrupts, set watchdog timer, wait for reset */
 #define HAL_SYSTEM_RESET()  st( HAL_DISABLE_INTERRUPTS(); WDCTL = WD_RESET1; WDCTL = WD_RESET2; for(;;); )
 

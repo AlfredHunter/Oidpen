@@ -86,10 +86,9 @@ void HalUARTIsrDMA(void);
 void HalUARTInit(void)
 {
 
-
-
+#if (defined HAL_UART_SPI) && (HAL_UART_SPI == 2)
   HalUARTInitSPI();
-
+#endif
 
 }
 
@@ -269,9 +268,9 @@ void HalUARTResume( void )
  *****************************************************************************/
 void HalUARTPoll(void)
 {
-
+#if (defined HAL_UART_SPI) && (HAL_UART_SPI == 2)
   HalUARTPollSPI();
-
+#endif
 }
 
 /**************************************************************************************************

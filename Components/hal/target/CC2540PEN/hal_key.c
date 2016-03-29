@@ -149,9 +149,11 @@ static void HalKeyISR(void);
 static EVT_FUNC_PTR key_event_tbl[HAL_KEY_EVENT_MAX] = {0};
 
 //static uint8 keyValue = MCU_IO_TRISTATE;
-static int counter = 0;
+//static int counter = 0;
 
-static uint8 keyStatus = HAL_KEY_EVENT_INVALID;
+//static uint8 keyStatus = HAL_KEY_EVENT_INVALID;
+
+static uint8 chargeStatus = HAL_CHARGE_EVENT_INVALID;
 /**************************************************************************************************
  *                                        FUNCTIONS - Local
  **************************************************************************************************/
@@ -177,23 +179,23 @@ void shortPressHandle(void);
  **************************************************************************************************/
 void HalKeyInit( void )
 {
-	HAL_CONFIG_IO_INPUT(HAL_KEY_PORT, HAL_KEY_PIN, MCU_IO_TRISTATE);
+	//HAL_CONFIG_IO_INPUT(HAL_KEY_PORT, HAL_KEY_PIN, MCU_IO_TRISTATE);
+        HAL_CONFIG_IO_INPUT(HAL_USB_DETECT_PORT,HAL_MIC_INSERT_PIN,MCU_IO_PULLDOWN);
         HAL_CONFIG_IO_INPUT(HAL_SENSOR_INT1_PORT, HAL_SENSOR_INT1_PIN, MCU_IO_TRISTATE);
         HAL_CONFIG_IO_INPUT(HAL_SENSOR_INT2_PORT, HAL_SENSOR_INT2_PIN, MCU_IO_TRISTATE);
         
 	halDigioConfig(&pinKey);
 	halDigioIntSetEdge(&pinKey, HAL_DIGIO_INT_RISING_EDGE);
 	halDigioIntConnect(&pinKey,&HalKeyISR);
-        HalKeyIntConnect(HAL_KEY_EVENT_LONG, &longPressHandle);
-        HalKeyIntConnect(HAL_KEY_EVENT_SHORT, &shortPressHandle);
+//        HalKeyIntConnect(HAL_KEY_EVENT_LONG, &longPressHandle);
+//        HalKeyIntConnect(HAL_KEY_EVENT_SHORT, &shortPressHandle);
 	HalKeyIntEnable();
         HalKeyConfigured = FALSE;
 }
-
+#if 0
 void longPressHandle(void)
 {
-//  HAL_SHAKER_ON();
-  HalLedSet(HAL_MOTOR, HAL_LED_MODE_BLINK);
+  HAL_SHAKER_ON();
   HalLedSet(HAL_LED_R, HAL_LED_MODE_ON);
 }
 
@@ -223,6 +225,8 @@ void shortPressHandle(void)
    }
 #endif
 }
+#endif
+
 /**************************************************************************************************
  * @fn      HalKeyIntConnect
  *
@@ -322,6 +326,14 @@ uint8 HalKeyRead()
   {
     keys |= HAL_SENSOR_SW_IN2;
   }
+  if ((HAL_CHG_STATUS_SW_PORT & HAL_CHG_STATUS_SW_BIT))    /* Key is active LOW */
+  {
+    keys |= HAL_CHG_STATUS_SW;
+  }
+  if (!(HAL_USB_DETECT_SW_PORT & HAL_USB_DETECT_SW_BIT))    /* Key is active low */
+  {
+    keys |= HAL_USB_DETECT_SW;
+  }
   return keys;
 //	return HAL_IO_GET(HAL_KEY_PORT, HAL_KEY_PIN);
 }
@@ -375,14 +387,12 @@ static void HalKeyISR(void)
  **************************************************************************************************/
 void processKey(void)
 {
-  //uint8 oldKeyValue = keyValue;
   uint8 keys = 0;
 //  uint8 notify = 0;
-  uint8 event_id = HAL_KEY_EVENT_INVALID;
+//  uint8 event_id = HAL_KEY_EVENT_INVALID;
   
   keys = HalKeyRead();
-//  keyValue = HalKeyRead();
-#if 0
+#if 1
 
   /* If interrupts are not enabled, previous key status and current key status
   * are compared to find out if a key has changed status.
@@ -396,7 +406,7 @@ void processKey(void)
     }
     else
     {
-      notify = 1;
+//      notify = 1;
     }
   }
   else
@@ -404,10 +414,11 @@ void processKey(void)
     /* Key interrupt handled here */
     if (keys)
     {
-      notify = 1;
+//      notify = 1;
     }
   }
 #endif
+#if 0
   counter++;
   //long push
   if( (keys & HAL_KEY_SW_1) && (counter > HAL_KEY_LONG_PUSH) ) 
@@ -437,10 +448,44 @@ void processKey(void)
     }
     event_id = HAL_KEY_EVENT_UP;
   }
-  
   if( event_id != HAL_KEY_EVENT_INVALID )
   {
     if(key_event_tbl[event_id]) key_event_tbl[event_id]();
+  }
+#endif  
+ 
+  if( keys & HAL_USB_DETECT_SW ) // exit power on
+  {
+    if( HAL_CHARGE_EVENT_FINISHED == chargeStatus)
+    {
+      HalLedSet(HAL_LED_G, HAL_LED_MODE_ON);
+    }
+    else
+    {
+      chargeStatus = HAL_CHARGE_EVENT_CHARGING;
+      if( HAL_CHARGE_EVENT_CHARGING == chargeStatus )
+      {
+        HalLedSet(HAL_LED_R, HAL_LED_MODE_ON);
+      }
+    }
+  }
+  else if( !(keys & HAL_USB_DETECT_SW )) // exit power off
+  {
+    chargeStatus = HAL_CHARGE_EVENT_OFF;
+    if( HAL_CHARGE_EVENT_OFF == chargeStatus )
+    {
+      HalLedSet(HAL_LED_R, HAL_LED_MODE_OFF);
+      HalLedSet(HAL_LED_G, HAL_LED_MODE_OFF);
+    }
+  }
+  if( keys & HAL_CHG_STATUS_SW ) // charge finished
+  {
+/*    chargeStatus = HAL_CHARGE_EVENT_FINISHED;
+    if( HAL_CHARGE_EVENT_FINISHED == chargeStatus )
+    {
+      HalLedSet(HAL_LED_R, HAL_LED_MODE_OFF);
+      HalLedSet(HAL_LED_G, HAL_LED_MODE_ON);
+    }*/
   }
   /* Store the current keys for comparation next time */
   halKeySavedKeys = keys;
@@ -475,6 +520,9 @@ void HalKeyConfig(bool interruptEnable, halKeyCBack_t cback)
   }
   /* Key now is configured */
   HalKeyConfigured = TRUE;
+#if (defined HAL_WD) && (HAL_WD == TRUE)
+    osal_set_event(Hal_TaskID, HAL_WD_EVENT);
+#endif
 }
 
 /**************************************************************************************************

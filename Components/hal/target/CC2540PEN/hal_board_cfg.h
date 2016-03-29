@@ -150,10 +150,10 @@ extern "C"
 
 
 /* LED */
-#define HAL_LED_B_PORT                    1 //  - zhj 20160113
-#define HAL_LED_B_PIN                     0
-#define HAL_LED_R_PORT                    0 //  - zhj 20160113
-#define HAL_LED_R_PIN                     7
+#define HAL_LED_B_PORT                    0 //  - zhj 20160113
+#define HAL_LED_B_PIN                     7
+#define HAL_LED_R_PORT                    1 //  - zhj 20160113
+#define HAL_LED_R_PIN                     0
 #define HAL_LED_G_PORT                    1 //  - zhj 20160113
 #define HAL_LED_G_PIN                     1
 
@@ -167,7 +167,13 @@ extern "C"
 #define HAL_KEY_PORT              0
 #define HAL_KEY_PIN               3
 
-/* BUZZER */
+/* charge */
+#define HAL_CHG_STATUS_PORT       2
+#define HAL_CHG_STATUS_PIN        0
+#define HAL_USB_DETECT_PORT       0
+#define HAL_USB_DETECT_PIN        0
+
+/* SHAKER */
 #define HAL_SHAKER_PORT                   0
 #define HAL_SHAKER_PIN                    5
 
@@ -420,10 +426,8 @@ st( \
 #endif
 
 /* Set to TRUE enable LCD usage, FALSE disable it */
-#if 0
 #ifndef HAL_LCD
 #define HAL_LCD TRUE
-#endif
 #endif
 
 /* Set to TRUE enable LED usage, FALSE disable it */

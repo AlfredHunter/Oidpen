@@ -497,6 +497,7 @@ status_t Get6DPosition(u8_t* val);
 
 void HalLis3dhSelect(void);
 
+void initAcc(void);
 
 //Generic
 // i.e. u8_t ReadReg(u8_t Reg, u8_t* Data);

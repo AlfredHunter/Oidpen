@@ -1440,3 +1440,17 @@ status_t SetSPIInterface(SPIMode_t spi) {
   
   return MEMS_SUCCESS;
 }
+
+void initAcc(void)
+{
+    while(!WriteReg(CTRL_REG1, 0x27)); 
+    while(!WriteReg(CTRL_REG2, 0x01)); 
+    
+    while(!WriteReg(CTRL_REG3, 0x40)); 
+    while(!WriteReg(CTRL_REG4, 0x88)); 
+    SetMode( LOW_POWER );
+    while(!WriteReg(CTRL_REG5, 0x00)); 
+    while(!WriteReg(INT1_THS, 0x08)); 
+    while(!WriteReg(INT1_DURATION, 0x32)); 
+    while(!WriteReg(INT1_CFG, 0x95)); 
+}

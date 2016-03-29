@@ -496,7 +496,7 @@ static void HalUARTInitSPI(void)
 
   PxSEL |= HAL_UART_Px_SEL_S;        /* SPI-Slave peripheral select */
   UxCSR = CSR_SLAVE;                 /* Mode is SPI-Slave Mode */
-  
+  UxGCR |= BV(7);
  // halDigioConfig(&pinSpiCS);
   halDigioIntSetEdge(&pinSpiCS, HAL_DIGIO_INT_FALLING_EDGE);
   halDigioIntConnect(&pinSpiCS, HalUART_IsrSPI);
@@ -720,14 +720,14 @@ static void HalUARTPollSPI(void)
     }
 
 #if defined POWER_SAVING
-  if  ( SPI_RDY_IN()|| SPI_RX_RDY() || spiRxLen || spiTxLen || spiRdyIsr ||  pktFound || SPI_RDY_OUT() )
+  if  ( SPI_RDY_IN()|| SPI_RX_RDY() || spiRxLen || spiTxLen || spiRdyIsr ||  pktFound )//|| SPI_RDY_OUT() )
   {
     CLEAR_SLEEP_MODE();
   }
   else if ( (!pktFound) && (!SPI_NEW_RX_BYTE(spiRxIdx)) )
   {
     PxIEN |= SPI_RDYIn_BIT; 
-    SPI_CLR_RDY_OUT();
+//    SPI_CLR_RDY_OUT();
   }
 #endif
   spiRdyIsr = 0;

@@ -49,7 +49,8 @@
 
 #include "hal_led.h"
 #include "hal_key.h"
-   
+#include "hal_oid.h"
+
 #include "npi.h"
 
 
@@ -368,10 +369,15 @@ void  OnBoard_OidRecvCallback( uint16 oid )
 {
     resetLis3dTimerCount();
     //判断处理IOD值
+
+    if( OID_POWER_OFF == getOidState() ) //关闭OID和唤醒时有数据发出
+      return;
+    
     //--------------------发送OID值
     if( OnBoard_SendOids(oid) == SUCCESS)
-    {
-//        HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);      
+    {   
+          HalLedSet(HAL_LED_G, HAL_LED_MODE_10HZ_200MS_FLASH); 
+          HalLedSet(HAL_MOTOR, HAL_MOTOR_MODE_200MS_ON);
     }
 }
 /*********************************************************************

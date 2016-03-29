@@ -34,7 +34,7 @@ extern "C"
 
 typedef enum {
   OID_POWER_OFF = 0x00,
-  OID_POWER_ON  = 0x01
+  OID_POWER_ON  = 0xFF
 } oidState_t;
 /**************************************************************************************************
  *                                        FUNCTIONS - API
@@ -48,7 +48,7 @@ typedef enum {
 
 extern void halOidPower(uint8 on) ;
 extern void HalOidInit(void);
-extern oidState_t getOidState(void);
+extern uint8 getOidState(void);
 
 #ifdef __cplusplus
 }

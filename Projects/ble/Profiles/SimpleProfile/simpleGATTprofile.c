@@ -176,13 +176,13 @@ static uint8 simpleProfileChar4UserDesp[10] = "Dish Code\0";
 
 
 // Simple Profile Characteristic 5 Properties
-static uint8 simpleProfileChar5Props = GATT_PROP_READ;
+static uint8 simpleProfileChar5Props = GATT_PROP_WRITE;
 
 // Characteristic 5 Value
-static uint8 simpleProfileChar5[SIMPLEPROFILE_CHAR5_LEN] = { 0, 0, 0, 0, 0 };
+static uint8 simpleProfileChar5 = 0;
 
 // Simple Profile Characteristic 5 User Description
-static uint8 simpleProfileChar5UserDesp[17] = "Characteristic 5\0";
+static uint8 simpleProfileChar5UserDesp[11] = "WriteValue\0";
 
 
 /*********************************************************************
@@ -332,9 +332,9 @@ static gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] =
       // Characteristic Value 5
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar5UUID },
-        GATT_PERMIT_AUTHEN_READ, 
+        GATT_PERMIT_WRITE,//GATT_PERMIT_AUTHEN_READ, 
         0, 
-        simpleProfileChar5 
+        (uint8 *)&simpleProfileChar5
       },
 
       // Characteristic 5 User Description
@@ -516,9 +516,9 @@ bStatus_t SimpleProfile_SetParameter( uint8 param, uint8 len, void *value )
       break;
 
     case SIMPLEPROFILE_CHAR5:
-      if ( len == SIMPLEPROFILE_CHAR5_LEN ) 
+      if ( len == sizeof( uint8 ) ) //if ( len == SIMPLEPROFILE_CHAR5_LEN ) 
       {
-        VOID osal_memcpy( simpleProfileChar5, value, SIMPLEPROFILE_CHAR5_LEN );
+        simpleProfileChar5 = *((uint8*)value);//VOID osal_memcpy( simpleProfileChar5, value, SIMPLEPROFILE_CHAR5_LEN );
       }
       else
       {
@@ -569,7 +569,7 @@ bStatus_t SimpleProfile_GetParameter( uint8 param, void *value )
       break;
 
     case SIMPLEPROFILE_CHAR5:
-      VOID osal_memcpy( value, simpleProfileChar5, SIMPLEPROFILE_CHAR5_LEN );
+      *((uint8*)value) = simpleProfileChar5;//VOID osal_memcpy( value, simpleProfileChar5, SIMPLEPROFILE_CHAR5_LEN );
       break;      
       
     default:
@@ -634,10 +634,10 @@ static uint8 simpleProfile_ReadAttrCB( uint16 connHandle, gattAttribute_t *pAttr
         VOID osal_memcpy( pValue, pAttr->pValue,2);
         break;
 
-      case SIMPLEPROFILE_CHAR5_UUID:
-        *pLen = SIMPLEPROFILE_CHAR5_LEN;
-        VOID osal_memcpy( pValue, pAttr->pValue, SIMPLEPROFILE_CHAR5_LEN );
-        break;
+//      case SIMPLEPROFILE_CHAR5_UUID:
+//        *pLen = SIMPLEPROFILE_CHAR5_LEN;
+//        VOID osal_memcpy( pValue, pAttr->pValue, SIMPLEPROFILE_CHAR5_LEN );
+//        break;
         
       default:
         // Should never get here! (characteristics 3 and 4 do not have read permissions)
@@ -689,7 +689,7 @@ static bStatus_t simpleProfile_WriteAttrCB( uint16 connHandle, gattAttribute_t *
     switch ( uuid )
     {
       case SIMPLEPROFILE_CHAR1_UUID:
-      case SIMPLEPROFILE_CHAR3_UUID:
+      case SIMPLEPROFILE_CHAR5_UUID:
 
         //Validate the value
         // Make sure it's not a blob oper
@@ -717,7 +717,7 @@ static bStatus_t simpleProfile_WriteAttrCB( uint16 connHandle, gattAttribute_t *
           }
           else
           {
-            notifyApp = SIMPLEPROFILE_CHAR3;           
+            notifyApp = SIMPLEPROFILE_CHAR5;           
           }
         }
              

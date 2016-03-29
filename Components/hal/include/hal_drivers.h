@@ -60,7 +60,9 @@ extern "C"
 #define HAL_KEY_EVENT                       0x0010
 #define HAL_MIC_EVENT                       0x0008
 #define HAL_OID_EVENT                       0x0100
-
+#define HAL_WD_EVENT                        0x0200
+#define HAL_SLEEP_EVENT                     0x0400
+   
 #if defined POWER_SAVING
 #define HAL_SLEEP_TIMER_EVENT               0x0004
 #define HAL_PWRMGR_HOLD_EVENT               0x0002
@@ -70,11 +72,12 @@ extern "C"
 #define HAL_PWRMGR_CONSERVE_DELAY           10
 #define PERIOD_RSSI_RESET_TIMEOUT           10
 
+#define HAL_WD_KICK_PERIOD                  900
 /**************************************************************************************************
  * GLOBAL VARIABLES
  **************************************************************************************************/
 
-extern uint8 Hal_TaskID;
+extern uint8  Hal_TaskID;
 
 /**************************************************************************************************
  * FUNCTIONS - API
@@ -96,6 +99,12 @@ extern void Hal_ProcessPoll (void);
  * Initialize HW
  */
 extern void HalDriverInit (void);
+
+#if defined( HAL_SLEEP )
+
+extern void SysPowerMode( uint8 mode );
+
+#endif
 
 #ifdef __cplusplus
 }

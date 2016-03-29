@@ -31,7 +31,10 @@
 #include "OnBoard.h"
 #include "hal_led.h"
 #include "hal_oid.h"
-
+#include "hal_interrupt.h"
+#include "hal_sleep.h"
+#include "hal_drivers.h"
+#include "lis3dh_driver.h"
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 // How often to perform periodic event
@@ -49,11 +52,13 @@ uint8 Test_response_Who;
  * LOCAL VARIABLES
  */
 static uint8 gSensorApp_TaskID;   // Task ID for internal task/event processing
-static uint8 timer_count = 0;
+volatile static uint8 timer_count = 0;
 static uint16 old_xData = 0;
 /* Extern variables ----------------------------------------------------------*/
 
 /* Private function prototypes -----------------------------------------------*/
+static void init_gsensor_interrupt( void );
+static void Hal_Sensor_ISR(void);
 /* Private functions ---------------------------------------------------------*/
 
 //define for example1 or example2
@@ -73,49 +78,48 @@ uint8 position=0, old_position=0;
 
 void HalLis3dhInit(void)
 {
-//  uint8 buffer[26]; 
-
-//  AccAxesRaw_t data;
   //Initialize your hardware here
   HalLis3dhSelect();
-  
-  //function for MKI109V1 board 
-  //InitHardware();
-  //SPI_Mems_Init();
-     
-  //Inizialize MEMS Sensor
-  //set ODR (turn ON device)
-  
+  initAcc();
+#if 0
+  do{
   response = GetWHO_AM_I(&Test_response_Who);
-  if(response==1)
-  {
-  }
-  response = SetODR(ODR_400Hz);
-  if(response==1)
-  {
-  }
-  //set PowerMode 
-  response = SetMode(NORMAL);
-  if(response==1)
-  {
-  }
-  //set Fullscale
-  response = SetFullScale(FULLSCALE_2);
-  if(response==1)
-  {
-  }
-  //set axis Enable
-  response = SetAxis(X_ENABLE | Y_ENABLE | Z_ENABLE);
-  if(response==1)
-  {
-  }
-  
-   response = GetAccAxesRaw(&Accdata);
-   if(response==1)
-   { 
-      old_position = position;
-   }
+  } while(response == MEMS_ERROR );
 
+  do{
+  response = SetODR(ODR_10Hz);
+  } while(response == MEMS_ERROR );
+  //set PowerMode 
+  do{
+  response = SetMode(NORMAL);
+  } while(response == MEMS_ERROR );  
+  //set Fullscale
+  do{
+  response = SetFullScale(FULLSCALE_2);
+  } while(response == MEMS_ERROR );
+  //set axis Enable
+  do{
+  response = SetAxis(X_ENABLE | Y_ENABLE | Z_ENABLE);
+  } while(response == MEMS_ERROR );
+  do{
+  response = SetInt1Pin(I1_INT1_ON_PIN_INT1_ENABLE);
+  } while(response == MEMS_ERROR );  
+  do{
+  response = Int1LatchEnable(MEMS_DISABLE);
+  } while(response == MEMS_ERROR );
+  //set Interrupt Threshold 
+  do{
+  response = SetInt1Threshold(8);
+  } while(response == MEMS_ERROR );
+  do{
+  response = SetInt1Duration(50);
+  } while(response == MEMS_ERROR );
+     //set Interrupt configuration (all enabled)
+  do{
+  response = SetIntConfiguration(INT1_ZLIE_ENABLE |
+                                 INT1_YLIE_ENABLE |  INT1_XLIE_ENABLE ); 
+  } while(response == MEMS_ERROR );  
+#endif
 /***********************************************************************************************/  
 /******Example 1******/ 
 #ifdef __EXAMPLE1__H 
@@ -152,8 +156,6 @@ void HalLis3dhInit(void)
   {
   }
 
-//#ifdef __EXAMPLE2__H
-
   while(1)
   {
     //get 6D Position
@@ -175,17 +177,7 @@ void HalLis3dhInit(void)
     }
   }
 #endif /*__EXAMPLE2__H */ 
-#if 0
-  response = SetClickTHS( 20 );
-  if(response == 1) {}
-  response = SetClickCFG( ZD_ENABLE | ZS_ENABLE | YD_ENABLE | YS_ENABLE | XD_ENABLE | XS_ENABLE);
-  if(response == 1)
-  {
-  }
-  SetClickLATENCY(100);
-  SetClickLIMIT(50);
-  SetInt2Pin( CLICK_ON_PIN_INT2_ENABLE );
-#endif
+  init_gsensor_interrupt();
 /************************************************************************************************/
 } // end main
 
@@ -196,25 +188,12 @@ void resetLis3dTimerCount(void)
 
 static void performPeriodicTask( void )
 {
-#if 0
-    uint8 click_state;
-    response = GetClickResponce(&click_state);
-    if( (response == 1) && (click_state != NO_CLICK ))
-    {
-      HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK); 
-    }
-#endif
     
-#if 0     
+#if 0   
     //get 6D Position
     response = Get6DPosition(&position);
     if((response==1) && (old_position!=position))
     {
-      if( OID_POWER_OFF == getOidState())
-      {
-        halOidPower(1);
-        HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
-      }
       switch (position)
       {
         case UP_SX:            
@@ -241,7 +220,6 @@ static void performPeriodicTask( void )
       //function for MKI109V1 board    
       old_position = position;
       HalLedSet(HAL_LED_G, HAL_LED_MODE_BLINK); 
-      timer_count = 0;
     }
 #endif
     timer_count ++ ;
@@ -252,13 +230,17 @@ static void performPeriodicTask( void )
       {
         halOidPower(0);
         HalLedSet(HAL_LED_R, HAL_LED_MODE_BLINK); 
+#if defined HAL_SLEEP
+        osal_start_timerEx( Hal_TaskID, HAL_SLEEP_EVENT, 2000 );
+//        SysPowerMode(3);
+#endif
       }
     }
 #if 1
     //get Acceleration Raw data  
     response = GetAccAxesRaw(&Accdata);
     
-    if(response==1)
+    if( response==1 )
     { 
       osal_memcpy(&oldAccdata, &Accdata, sizeof(AccAxesRaw_t));
 //      old_position = position;
@@ -277,8 +259,8 @@ static void performPeriodicTask( void )
       old_xData = ( Accdata.AXIS_X & 0xff00 );
       
       if(SUCCESS == OnBoard_Send_gSensors(LIS_X, SWAP_UINT16(Accdata.AXIS_X)));
-      if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, SWAP_UINT16(Accdata.AXIS_Y)));
-      if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));     
+//      if(SUCCESS == OnBoard_Send_gSensors(LIS_Y, SWAP_UINT16(Accdata.AXIS_Y)));
+//      if(SUCCESS == OnBoard_Send_gSensors(LIS_Z, SWAP_UINT16(Accdata.AXIS_Z)));     
     }
 #endif
 }
@@ -320,7 +302,31 @@ uint16 gSensorApp_ProcessEvent( uint8 task_id, uint16 events )
   return 0;
 }
 
+static const digioConfig pinKey[2] = {
+  { HAL_SENSOR_INT1_PORT,
+    HAL_SENSOR_INT1_PIN,
+    BV( HAL_SENSOR_INT1_PIN ),
+    HAL_DIGIO_INPUT, 0 },
+  { HAL_SENSOR_INT2_PORT,
+    HAL_SENSOR_INT2_PIN,
+    BV( HAL_SENSOR_INT2_PIN ),
+    HAL_DIGIO_INPUT, 0 } 
+};
+
+static void init_gsensor_interrupt( void )
+{
+  halDigioConfig( &pinKey[0] );
+  halDigioIntSetEdge( &pinKey[0], HAL_DIGIO_INT_FALLING_EDGE );
+  halDigioIntConnect( &pinKey[0], &Hal_Sensor_ISR );
+  halDigioIntEnable(&pinKey[0]);
+}
 
 
-
-
+static void Hal_Sensor_ISR(void)
+{
+//  CLEAR_SLEEP_MODE();
+#if defined HAL_SLEEP
+  SysPowerMode(4);
+#endif
+  HalLedSet(HAL_LED_B, HAL_LED_MODE_BLINK);
+}

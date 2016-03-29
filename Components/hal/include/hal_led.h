@@ -74,18 +74,30 @@ extern "C"
 #define HAL_LED_MODE_TOGGLE  0x08
 #define HAL_LED_MODE_5HZ_FLASH  0x10
 #define HAL_LED_MODE_10HZ_FLASH 0x20
-
+#define HAL_MOTOR_MODE_200MS_ON 0x40
+//#define HAL_MOTOR_MODE_500MS_ON 0x80
+#define HAL_LED_MODE_10HZ_200MS_FLASH 0x80
+   
 /* Defaults */
 #define HAL_LED_DEFAULT_MAX_LEDS      4
 #define HAL_LED_DEFAULT_DUTY_CYCLE    50
-#define HAL_LED_DEFAULT_FLASH_COUNT   50
+#define HAL_LED_DEFAULT_FLASH_COUNT   100
 #define HAL_LED_DEFAULT_FLASH_TIME    100
 
 /* Users */
 #define HAL_LED_5HZ_FLASH_COUNT       4
 #define HAL_LED_5HZ_FLASH_TIME        200
 #define HAL_LED_10HZ_FLASH_COUNT      0
+#define HAL_LED_MODE_10HZ_200MS_FLASH_COUNT 2
 #define HAL_LED_10HZ_FLASH_TIME       100
+
+#define HAL_MOTOR_200MS_DUTY_CYCLE    99
+#define HAL_MOTOR_200MS_ON_COUNT      2
+#define HAL_MOTOR_200MS_ON_TIME       100
+   
+#define HAL_MOTOR_500MS_DUTY_CYCLE    99
+#define HAL_MOTOR_500MS_ON_COUNT      5
+#define HAL_MOTOR_500MS_ON_TIME       100
 /*********************************************************************
  * TYPEDEFS
  */

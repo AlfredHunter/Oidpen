@@ -69,7 +69,9 @@ extern "C"
 #define HAL_KEY_SW_1            0x01  // Key
 #define HAL_SENSOR_SW_IN1       0x02  // Sensor Int1
 #define HAL_SENSOR_SW_IN2       0x03  // Sensor Int2
-
+#define HAL_CHG_STATUS_SW       0x04
+#define HAL_USB_DETECT_SW       0x10
+   
 /* key is at P0.3 */
 #define HAL_KEY_SW_1_PORT     P0
 #define HAL_KEY_SW_1_BIT      BV(3)
@@ -88,6 +90,18 @@ extern "C"
 #define HAL_SENSOR_SW_IN2_SEL      P0SEL
 #define HAL_SENSOR_SW_IN2_DIR      P0DIR
 
+/* CHG Status is at P2.0 */
+#define HAL_CHG_STATUS_SW_PORT     P2
+#define HAL_CHG_STATUS_SW_BIT      BV(0)
+#define HAL_CHG_STATUS_SW_SEL      P2SEL
+#define HAL_CHG_STATUS_SW_DIR      P2DIR
+   
+/* USB detect is at P0.0 */
+#define HAL_USB_DETECT_SW_PORT     P0
+#define HAL_USB_DETECT_SW_BIT      BV(0)
+#define HAL_USB_DETECT_SW_SEL      P0SEL
+#define HAL_USB_DETECT_SW_DIR      P0DIR
+   
 #define HAL_KEY_DEBOUNCE_VALUE  25
 #define HAL_KEY_LONG_PUSH_VALUE  5000
 #define HAL_KEY_LONG_PUSH (HAL_KEY_LONG_PUSH_VALUE/HAL_KEY_DEBOUNCE_VALUE)
@@ -101,6 +115,12 @@ enum {
 	HAL_KEY_EVENT_INVALID
 };
 
+enum {
+        HAL_CHARGE_EVENT_OFF,
+        HAL_CHARGE_EVENT_CHARGING,
+        HAL_CHARGE_EVENT_FINISHED,
+        HAL_CHARGE_EVENT_INVALID
+};
 /**************************************************************************************************
  * TYPEDEFS
  **************************************************************************************************/

@@ -188,6 +188,12 @@ void HalDriverInit (void)
   
   /* MIC */
    // HalMicInit();  // zhj 20160115
+
+  /* WD */
+#if (defined HAL_WD) && (HAL_WD == TRUE)
+  WD_INIT_1000MS();
+#endif
+  
 }
 
 /**************************************************************************************************
@@ -257,7 +263,7 @@ uint16 Hal_ProcessEvent( uint8 task_id, uint16 events )
 //---------------------------------------------OID
 	//send the Mac address to microphone
 	//osal_start_timerEx( Hal_TaskID, HAL_MIC_EVENT, 100);
-#if 0
+#if 1
   if (events & HAL_OID_EVENT)
   {
      HAL_IO_SET_HIGH(HAL_OID_RST_PORT, HAL_OID_RST_PIN);
@@ -286,7 +292,22 @@ uint16 Hal_ProcessEvent( uint8 task_id, uint16 events )
     return events ^ HAL_PWRMGR_CONSERVE_EVENT;
   }
 #endif
-
+  /* WD */
+#if (defined HAL_WD) && (HAL_WD == TRUE)
+  if (events & HAL_WD_EVENT)
+  {
+    WD_KICK();
+    osal_start_timerEx (Hal_TaskID, HAL_WD_EVENT, HAL_WD_KICK_PERIOD);
+    return events ^ HAL_WD_EVENT;
+  }
+#endif
+#if defined HAL_SLEEP
+  if ( events & HAL_SLEEP_EVENT )
+  {
+    SysPowerMode(3);
+    return events ^ HAL_SLEEP_EVENT;
+  }
+#endif
   return 0;
 }
 
@@ -307,12 +328,23 @@ void Hal_ProcessPoll ()
 #endif
   
   /* UART Poll */
-
+#if (defined HAL_UART_SPI) && (HAL_UART_SPI == 2)
   HalUARTPoll();
-
+#endif
  
 }
-
+#if defined( HAL_SLEEP )
+void SysPowerMode( uint8 mode )
+{
+  if( mode < 4 )
+  {
+    SLEEPCMD |= mode;
+    PCON = 0x01;
+  }
+  else
+    PCON = 0x00;
+}
+#endif
 /**************************************************************************************************
 **************************************************************************************************/
 

@@ -145,7 +145,6 @@ uint8 HalLedSet (uint8 leds, uint8 mode)
       /* Default blink, 1 time, D% duty cycle */
       HalLedBlink (leds, 5, HAL_LED_DEFAULT_DUTY_CYCLE, HAL_LED_DEFAULT_FLASH_TIME);
       break;
-
     case HAL_LED_MODE_FLASH:
       /* Default flash, N times, D% duty cycle */
       HalLedBlink (leds, HAL_LED_DEFAULT_FLASH_COUNT, HAL_LED_DEFAULT_DUTY_CYCLE, HAL_LED_DEFAULT_FLASH_TIME);
@@ -153,9 +152,18 @@ uint8 HalLedSet (uint8 leds, uint8 mode)
     case HAL_LED_MODE_10HZ_FLASH:
       HalLedBlink (leds, HAL_LED_10HZ_FLASH_COUNT, HAL_LED_DEFAULT_DUTY_CYCLE, HAL_LED_10HZ_FLASH_TIME);
       break;
+    case HAL_LED_MODE_10HZ_200MS_FLASH:
+      HalLedBlink (leds, HAL_LED_MODE_10HZ_200MS_FLASH_COUNT, HAL_LED_DEFAULT_DUTY_CYCLE, HAL_LED_10HZ_FLASH_TIME);
+      break;
     case HAL_LED_MODE_5HZ_FLASH:
       HalLedBlink (leds, HAL_LED_5HZ_FLASH_COUNT, HAL_LED_DEFAULT_DUTY_CYCLE, HAL_LED_5HZ_FLASH_TIME);
       break;
+    case HAL_MOTOR_MODE_200MS_ON:
+      HalLedBlink (leds, HAL_MOTOR_200MS_ON_COUNT, HAL_MOTOR_200MS_DUTY_CYCLE, HAL_MOTOR_200MS_ON_TIME);
+      break;
+//    case HAL_MOTOR_MODE_500MS_ON:
+//      HalLedBlink (leds, HAL_MOTOR_500MS_ON_COUNT, HAL_MOTOR_500MS_DUTY_CYCLE, HAL_MOTOR_500MS_ON_TIME);
+//      break;
     case HAL_LED_MODE_ON:
     case HAL_LED_MODE_OFF:
     case HAL_LED_MODE_TOGGLE:

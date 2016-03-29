@@ -10,7 +10,7 @@
 #include "hal_oid.h"
 
 
-static uint8 oidState = 0;
+volatile static uint8 oidState = OID_POWER_OFF;
 /* enable oid
   * 1) power up the OID sensor
   * 2) reset   the oid
@@ -32,7 +32,6 @@ void HalOidInit(void)
 //  HAL_CONFIG_IO_OUTPUT(HAL_OID_WAKEUP_PORT, HAL_OID_WAKEUP_PIN, 1 );  
 
   halOidPower(0);
-  oidState = OID_POWER_OFF;
 }
 /***************************************************************************************************
  * @fn      halOidPower
@@ -47,21 +46,22 @@ void halOidPower(uint8 on)
 {
   if(1 == on) 
   {
-    HAL_IO_SET_HIGH(HAL_OID_POWER_PORT, HAL_OID_POWER_PIN);
-    HAL_IO_SET_HIGH(HAL_OID_WAKEUP_PORT, HAL_OID_WAKEUP_PIN);
+    HAL_IO_SET_HIGH(HAL_OID_POWER_PORT, HAL_OID_POWER_PIN);  
+//    osal_start_timerEx (Hal_TaskID, HAL_OID_EVENT, 1000);
     HAL_IO_SET_HIGH(HAL_OID_RST_PORT,HAL_OID_RST_PIN);  
+    HAL_IO_SET_HIGH(HAL_OID_WAKEUP_PORT, HAL_OID_WAKEUP_PIN);
     oidState = OID_POWER_ON;
   } 
   else 
   {
-    HAL_IO_SET_LOW(HAL_OID_POWER_PORT, HAL_OID_POWER_PIN);
+    oidState = OID_POWER_OFF;
     HAL_IO_SET_LOW(HAL_OID_WAKEUP_PORT, HAL_OID_WAKEUP_PIN);
     HAL_IO_SET_LOW(HAL_OID_RST_PORT,HAL_OID_RST_PIN);  
-    oidState = OID_POWER_OFF;
+    HAL_IO_SET_LOW(HAL_OID_POWER_PORT, HAL_OID_POWER_PIN);
   }
 }
 
-oidState_t getOidState(void)
+uint8 getOidState(void)
 {
-  return (oidState_t)oidState;
+  return oidState;
 }

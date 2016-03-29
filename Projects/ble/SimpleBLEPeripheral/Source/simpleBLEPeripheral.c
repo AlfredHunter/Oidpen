@@ -49,7 +49,7 @@
 #include "hal_adc.h"
 #include "hal_led.h"
 #include "hal_key.h"
-//#include "hal_lcd.h"
+#include "hal_lcd.h"
 #include "hal_oid.h"
 
 #include "gatt.h"
@@ -98,7 +98,7 @@
 #if defined ( CC2540_MINIDK )
 #define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_LIMITED
 #else
-#define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_LIMITED//GAP_ADTYPE_FLAGS_GENERAL
+#define DEFAULT_DISCOVERABLE_MODE             GAP_ADTYPE_FLAGS_LIMITED //GAP_ADTYPE_FLAGS_GENERAL
 #endif  // defined ( CC2540_MINIDK )
 
 // Minimum connection interval (units of 1.25ms, 80=100ms) if automatic parameter update request is enabled
@@ -114,7 +114,7 @@
 #define DEFAULT_DESIRED_CONN_TIMEOUT          1000
 
 // Whether to enable automatic parameter update request when a connection is formed
-#define DEFAULT_ENABLE_UPDATE_REQUEST         TRUE
+#define DEFAULT_ENABLE_UPDATE_REQUEST         FALSE//TRUE
 
 // Connection Pause Peripheral time value (in seconds)
 #define DEFAULT_CONN_PAUSE_PERIPHERAL         6
@@ -308,7 +308,7 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
     GAPRole_SetParameter( GAPROLE_SLAVE_LATENCY, sizeof( uint16 ), &desired_slave_latency );
     GAPRole_SetParameter( GAPROLE_TIMEOUT_MULTIPLIER, sizeof( uint16 ), &desired_conn_timeout );
   }
-
+  GAP_SetParamValue( TGAP_LIM_ADV_TIMEOUT, 10 );//保持广播时间 unit for second，默认180S
   // Set the GAP Characteristics
   GGS_SetParameter( GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName );//GAP GATT服务器参数设置
 
@@ -319,8 +319,7 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
     GAP_SetParamValue( TGAP_LIM_DISC_ADV_INT_MIN, advInt );
     GAP_SetParamValue( TGAP_LIM_DISC_ADV_INT_MAX, advInt );
     GAP_SetParamValue( TGAP_GEN_DISC_ADV_INT_MIN, advInt );
-    GAP_SetParamValue( TGAP_GEN_DISC_ADV_INT_MAX, advInt );
-    GAP_SetParamValue( TGAP_LIM_ADV_TIMEOUT, 5 );//保持广播时间 unit for second，默认180S
+    GAP_SetParamValue( TGAP_GEN_DISC_ADV_INT_MAX, advInt );   
   }
 
   // Setup the GAP Bond Manager//GAP 绑定管理器设置
@@ -387,14 +386,8 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   // Enable clock divide on halt
   // This reduces active current while radio is active and CC254x MCU
   // is halted
-  HCI_EXT_ClkDivOnHaltCmd( HCI_EXT_ENABLE_CLK_DIVIDE_ON_HALT );
-
-#if defined ( DC_DC_P0_7 )
-
-  // Enable stack to toggle bypass control on TPS62730 (DC/DC converter)
-  HCI_EXT_MapPmIoPortCmd( HCI_EXT_PM_IO_PORT_P0, HCI_EXT_PM_IO_PORT_PIN7 );
-
-#endif // defined ( DC_DC_P0_7 )
+  //HCI_EXT_ClkDivOnHaltCmd( HCI_EXT_ENABLE_CLK_DIVIDE_ON_HALT );
+  HCI_EXT_HaltDuringRfCmd(HCI_EXT_HALT_DURING_RF_DISABLE);
 
   // Setup a delayed profile startup
   osal_set_event( simpleBLEPeripheral_TaskID, SBP_START_DEVICE_EVT );
@@ -444,7 +437,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
   {
     // Start the Device
      /*启动设备,括号内为回调函数,来设置要显示的信息或操作*/
-    VOID GAPRole_StartDevice( &simpleBLEPeripheral_PeripheralCBs );
+//    VOID GAPRole_StartDevice( &simpleBLEPeripheral_PeripheralCBs );
 
     // Start Bond Manager
      /*启动绑定管理函数,处理认证信息和注册任务信息*/
@@ -459,21 +452,13 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
   if ( events & SBP_RESTART_DEVICE_EVT )
   {
     uint8 adv_enabled = TRUE;
-        // Start the Device
-     /*启动设备,括号内为回调函数,来设置要显示的信息或操作*/
-//    VOID GAPRole_StartDevice( &simpleBLEPeripheral_PeripheralCBs );
 
-    // Start Bond Manager
-     /*启动绑定管理函数,处理认证信息和注册任务信息*/
-//    VOID GAPBondMgr_Register( &simpleBLEPeripheral_BondMgrCBs );
-//    GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );//当主机扫描到广播后会发出扫描请求，从机就发回该数据到主机
-//    GAPRole_SetParameter( GAPROLE_ADVERT_DATA, sizeof( advertData ), advertData );//广播参数
-    
-    GGS_GetParameter(GGS_DEVICE_NAME_ATT,attDeviceName);
-    GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
-    
     VOID GAPRole_StartDevice( &simpleBLEPeripheral_PeripheralCBs );
-    VOID GAPBondMgr_Register( &simpleBLEPeripheral_BondMgrCBs );
+    GAP_UpdateAdvertisingData( simpleBLEPeripheral_TaskID,     
+                               FALSE,    
+                               sizeof(scanRspData),    
+                               scanRspData );      //更新扫描应答数据 
+    GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
     
     return ( events ^ SBP_RESTART_DEVICE_EVT );
   }
@@ -527,17 +512,18 @@ static void simpleBLEPeripheral_ProcessOSALMsg( osal_event_hdr_t *pMsg )
   switch ( pMsg->event )
   {
     case OID_CHANGE:
+//        if (gapProfileState == GAPROLE_CONNECTED)
+//        if(IS_DISH_INC_NUMBER( ((oid_t *)pMsg)->oid ) || IS_DISH_RED_NUMBER( ((oid_t *)pMsg)->oid ) )
+        {
+          simpleBLEPeripheral_Oid( SWAP_UINT16(((oid_t *)pMsg)->oid ));
+//          HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH); 
+//          HalLedSet(HAL_LED_G, HAL_LED_MODE_10HZ_200MS_FLASH); 
+//          HalLedSet(HAL_MOTOR, HAL_MOTOR_MODE_200MS_ON);
+        }
         if(IS_TABLE_NUMBER( ((oid_t *)pMsg)->oid) ) 
         {
             changeBLEPenName( ((oid_t *)pMsg)->oid );	
             break;
-        }
-//        if (gapProfileState == GAPROLE_CONNECTED)
-        if(IS_DISH_INC_NUMBER( ((oid_t *)pMsg)->oid ) || IS_DISH_RED_NUMBER( ((oid_t *)pMsg)->oid ) )
-        {
-          simpleBLEPeripheral_Oid( SWAP_UINT16(((oid_t *)pMsg)->oid ));
-//          HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH); 
-          HalLedSet(HAL_LED_B, HAL_LED_MODE_5HZ_FLASH); 
         }
     break;
     case GENSOR_CHANGE:
@@ -670,7 +656,7 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
           HalLcdWriteString( "Disconnected",  HAL_LCD_LINE_3 );
         #endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
  //         HalLedSet(HAL_LED_B, HAL_LED_MODE_OFF );
-//          HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH);
+          HalLedSet(HAL_LED_R, HAL_LED_MODE_5HZ_FLASH);
       }
       break;
 
@@ -708,7 +694,6 @@ static void peripheralStateNotificationCB( gaprole_States_t newState )
   }
 
   gapProfileState = newState;
-
 #if !defined( CC2540_MINIDK )
   VOID gapProfileState;     // added to prevent compiler warning with
                             // "CC2540 Slave" configurations
@@ -751,24 +736,56 @@ static void changeBLEPenName(uint16 oid)
 	scanRspData[6] = '0' + table_num/100;
 	scanRspData[7] = '0' + table_num%100/10;
 	scanRspData[8] = '0' + table_num%10;		
-	
-//        GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
-//        GAPRole_TerminateConnection();
        
 	if( gapProfileState == GAPROLE_CONNECTED ) 
         {		
           GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
           GAPRole_TerminateConnection();
 	}
-/*	if( gapProfileState == GAPROLE_ADVERTISING )
+	if( gapProfileState == GAPROLE_ADVERTISING )
         {
           //disable advertising on disconnect
           GAPRole_SetParameter( GAPROLE_ADVERT_ENABLED, sizeof( uint8 ), &adv_enabled );
         }
- */   
-	GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );
+    
+//	GAPRole_SetParameter( GAPROLE_SCAN_RSP_DATA, sizeof ( scanRspData ), scanRspData );
 	GGS_SetParameter( GGS_DEVICE_NAME_ATT, GAP_DEVICE_NAME_LEN, attDeviceName ); 
         osal_start_timerEx( simpleBLEPeripheral_TaskID,  SBP_RESTART_DEVICE_EVT, 1000 );	
 }
+
+#if (defined HAL_LCD) && (HAL_LCD == TRUE)
+/*********************************************************************
+ * @fn      bdAddr2Str
+ *
+ * @brief   Convert Bluetooth address to string. Only needed when
+ *          LCD display is used.
+ *
+ * @return  none
+ */
+char *bdAddr2Str( uint8 *pAddr )
+{
+  uint8       i;
+  char        hex[] = "0123456789ABCDEF";
+  static char str[B_ADDR_STR_LEN];
+  char        *pStr = str;
+
+  *pStr++ = '0';
+  *pStr++ = 'x';
+
+  // Start from end of addr
+  pAddr += B_ADDR_LEN;
+
+  for ( i = B_ADDR_LEN; i > 0; i-- )
+  {
+    *pStr++ = hex[*--pAddr >> 4];
+    *pStr++ = hex[*pAddr & 0x0F];
+  }
+
+  *pStr = 0;
+
+  return str;
+}
+#endif // (defined HAL_LCD) && (HAL_LCD == TRUE)
+
 /*********************************************************************
 *********************************************************************/
